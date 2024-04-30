@@ -1,0 +1,24 @@
+// Custom Bootstrap – this directory protocolls changes on Bootstrap and will be not deleted when updating Bootstrap
+// $blue: #612BFB;
+// $grey: #F8F9FA;
+// $spacer: 1rem !default;
+// $spacers: (
+//     0: 0,
+//     1: $spacer * .25,
+//     2: $spacer * .5,
+//     3: $spacer,
+//     4: $spacer * 1.6,
+//     5: $spacer * 3,
+//     ) !default;
+
+@import "../bootstrap-5.3.2/scss/bootstrap.scss";
+@import "custom-navbar.scss";
+@import "custom-table.scss";
+@import "custom-drag-drop.scss";
+// @import "custom-navbar.scss";
+// @import "custom-grid.scss";
+// @import "custom-form.scss";
+// @import "custom-button.scss";
+// @import "custom-radio-cards.scss";
+
+

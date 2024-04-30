@@ -1,0 +1,172 @@
+/* 
+>
+Navbar
+>
+Custom SCSS
+>
+*/
+
+// Original – bootstrap-5.3.2/scss/_nav.scss; line 24
+.nav-link {
+    display: block;
+    padding: var(--#{$prefix}nav-link-padding-y) var(--#{$prefix}nav-link-padding-x);
+    @include font-size(1.5rem);
+    font-weight: 600;
+    color: var(--#{$prefix}nav-link-color);
+    text-decoration: if($link-decoration ==none, null, none);
+    background: none;
+    border: 0;
+    @include transition($nav-link-transition);
+
+    &:hover,
+    &:focus {
+        background-color: #F8F9FA;
+        color: var(--#{$prefix}nav-link-hover-color);
+        text-decoration: if($link-hover-decoration ==underline, none, null);
+    }
+
+    &:focus-visible {
+        outline: 0;
+        box-shadow: $nav-link-focus-box-shadow;
+    }
+
+    // Disabled state lightens text
+    &.disabled,
+    &:disabled {
+        color: var(--#{$prefix}nav-link-disabled-color);
+        pointer-events: none;
+        cursor: default;
+    }
+}
+
+// Original – bootstrap-5.3.2/scss/_navbar.scss; line 86
+.navbar-nav {
+    // scss-docs-start navbar-nav-css-vars
+    --#{$prefix}nav-link-padding-x: 0;
+    --#{$prefix}nav-link-padding-y: #{$nav-link-padding-y};
+    @include rfs($nav-link-font-size, --#{$prefix}nav-link-font-size);
+    --#{$prefix}nav-link-font-weight: #{$nav-link-font-weight};
+    --#{$prefix}nav-link-color: var(--#{$prefix}navbar-color);
+    --#{$prefix}nav-link-hover-color: var(--#{$prefix}navbar-hover-color);
+    --#{$prefix}nav-link-disabled-color: var(--#{$prefix}navbar-disabled-color);
+    // scss-docs-end navbar-nav-css-vars
+
+    display: flex;
+    flex-direction: column; // cannot use `inherit` to get the `.navbar`s value
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+
+    .nav-link {
+
+        &.active,
+        &.show {
+            color: var(--bs-primary) !important;
+        }
+    }
+
+    .dropdown-menu {
+        position: static;
+    }
+}
+
+// Original – bootstrap-5.3.2/scss/_navbar.scss; line 192 
+.navbar-expand {
+    @each $breakpoint in map-keys($grid-breakpoints) {
+        $next: breakpoint-next($breakpoint, $grid-breakpoints);
+        $infix: breakpoint-infix($next, $grid-breakpoints);
+
+        // stylelint-disable-next-line scss/selector-no-union-class-name
+        &#{$infix} {
+            @include media-breakpoint-up($next) {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+
+                .navbar-nav {
+                    flex-direction: row;
+
+                    .dropdown-menu {
+                        position: absolute;
+                    }
+
+                    .nav-link {
+                        padding-right: var(--#{$prefix}navbar-nav-link-padding-x);
+                        padding-left: var(--#{$prefix}navbar-nav-link-padding-x);
+                    }
+                }
+
+                .navbar-nav-scroll {
+                    overflow: visible;
+                }
+
+                .navbar-collapse {
+                    display: flex !important; // stylelint-disable-line declaration-no-important
+                    flex-basis: auto;
+                }
+
+                .navbar-toggler {
+                    display: none;
+                }
+
+                .offcanvas {
+                    // stylelint-disable declaration-no-important
+                    position: static;
+                    z-index: auto;
+                    flex-grow: 1;
+                    width: auto !important;
+                    height: auto !important;
+                    visibility: visible !important;
+                    background-color: transparent !important;
+                    border: 0 !important;
+                    transform: none !important;
+                    @include box-shadow(none);
+                    @include transition(none);
+                    // stylelint-enable declaration-no-important
+
+                    .offcanvas-header {
+                        display: none;
+                    }
+
+                    .offcanvas-body {
+                        display: flex;
+                        flex-grow: 0;
+                        padding: 0;
+                        overflow-y: visible;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.navbar-expand-md {
+    padding-left: 5%;
+    padding-right: 5%;
+    border-bottom: 1px solid #212529;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,0,0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.navbar-toggler {
+    border-color: black !important;
+}
+
+.navbar-brand {
+    padding-top: var(--#{$prefix}navbar-brand-padding-y);
+    padding-bottom: var(--#{$prefix}navbar-brand-padding-y);
+    margin-right: var(--#{$prefix}navbar-brand-margin-end);
+    @include font-size(var(--#{$prefix}navbar-brand-font-size));
+    color: $black !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration: if($link-decoration == none, null, none);
+    white-space: nowrap;
+  
+    &:hover,
+    &:focus {
+      color: var(--#{$prefix}navbar-brand-hover-color);
+      text-decoration: if($link-hover-decoration == underline, none, null);
+    }
+  }

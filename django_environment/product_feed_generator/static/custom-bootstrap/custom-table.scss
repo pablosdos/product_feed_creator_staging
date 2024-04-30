@@ -1,0 +1,21 @@
+tbody > tr:hover {
+    cursor: pointer;
+    background-color:  var(--bs-primary) !important;
+}
+
+tbody > tr > th {
+  font-weight: 400;
+}
+
+// Original – bootstrap-5.3.2/scss/forms/_form-check.scss
+.form-check {
+    display: table-row !important;
+    min-height: $form-check-min-height;
+    padding-left: $form-check-padding-start;
+    margin-bottom: $form-check-margin-bottom;
+  
+    .form-check-input {
+      float: left;
+      margin-left: $form-check-padding-start * -1;
+    }
+  }

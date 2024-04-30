@@ -1,0 +1,16 @@
+<form class=""
+      method="POST">
+    <!-- 
+        change button behaviour
+        behalf on the type of shop –
+        need credentials or not
+    -->
+    <button type="submit"
+            name="{% if feed.shop_name == 'IngramMicro' %}generate_refresh_submit_with_password{% else %}generate_refresh_submit{% endif %}"
+            class="btn btn-primary my-2">Generate / Refresh Products list
+    </button>
+</form>
+<p class="mb-2">Note, it may take some minutes, if many products in the source file</p>
+{% if note %}
+<p class="my-2" style="color: red;">{{note}}</p>
+{% endif %}</br>
