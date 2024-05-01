@@ -47,13 +47,13 @@ def from_serverkast_feed(request, shop_name):
                 is_selected=False,
                 sku=item["sku"],
                 name=item["name"],
-                long_description=item.get("long_description", "empty"),
+                long_description=item.get("long_description", "description not available"),
                 main_image=item["main_image"],
                 extra_image_1=item.get("extra_image_1", None),
                 sales_price_excluding_tax=item["gross_price"],
                 shipping_weight=Decimal(0.0),
                 brand=item["brand"],
-                ean=item.get("ean", "empty"),
+                ean=item.get("ean", "EAN not available"),
                 current_stock=item["current_stock"],
             )
     # print(json.dumps(items[0], indent=4))

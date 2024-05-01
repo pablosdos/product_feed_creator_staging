@@ -15,7 +15,7 @@ from product_feed_generator.models import (
     IngramMicroProduct,
 )
 from product_feed_generator.modules.final_feed_.base import FinalFeed_
-from product_feed_generator.forms import ProductSelectForFinalFeedForm
+from product_feed_generator.forms import ProductSelectForFinalFeedForm, SortingSelectForm
 from product_feed_generator.views.helper import *
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -182,14 +182,6 @@ def product_selection_view(request, shop_name):
         return HttpResponse(template.render(context, request))
 
     elif "search_by_search_bar" in request.POST:
-        """
-        GET
-        REQUEST
-        OF PAGE
-        Product
-        Selection
-        Form
-        """
         search_query = request.POST.get("search_bar", "")
         object_list = Product.objects.filter(
             Q(name__icontains=search_query)
@@ -203,23 +195,8 @@ def product_selection_view(request, shop_name):
         paginated_form = ProductSelectForFinalFeedForm(
             paginator_control_with_products_queryset
         )
-        context = {
-            "feed": feed,
-            "form": paginated_form,
-            "paginator_control": paginator_control_with_products_queryset,
-            # "feed_config_form": feed_config_form,
-        }
-        return HttpResponse(template.render(context, request))
 
     elif "feed_source_selector" in request.POST:
-        """
-        GET
-        REQUEST
-        OF PAGE
-        Product
-        Selection
-        Form
-        """
         choosen_company = request.POST.get("feed_source_selector", "")
         object_list = Product.objects.filter(feed__shop_name__icontains=choosen_company)
         if choosen_company == 'All':
@@ -231,37 +208,53 @@ def product_selection_view(request, shop_name):
         paginated_form = ProductSelectForFinalFeedForm(
             paginator_control_with_products_queryset
         )
-        context = {
-            "feed": feed,
-            "form": paginated_form,
-            "paginator_control": paginator_control_with_products_queryset,
-            # "feed_config_form": feed_config_form,
-        }
-        return HttpResponse(template.render(context, request))
+
+    elif "sorting_options" in request.POST:
+        sort_type: str = request.POST.get("sorting_options", "")
+        products_to_be_shown = Product.objects.all()
+        if sort_type == "Sort by":
+            ordered_products = products_to_be_shown
+        if sort_type == "A - Z ↑":
+            ordered_products = products_to_be_shown.order_by("name")
+        if sort_type == "A - Z ↓":
+            ordered_products = products_to_be_shown.order_by("-name")
+        if sort_type == "Price ↑":
+            ordered_products = products_to_be_shown.order_by("sales_price_excluding_tax")
+        if sort_type == "Price ↓":
+            ordered_products = products_to_be_shown.order_by("-sales_price_excluding_tax")
+        paginator = Paginator(ordered_products, 50)
+        page_number = request.GET.get("page")
+        paginator_control_with_products_queryset = paginator.get_page(page_number)
+        paginated_form = ProductSelectForFinalFeedForm(
+            paginator_control_with_products_queryset
+        )
+        set_sorting_type = {'sorting_options': sort_type}
+        sorting_option_form = SortingSelectForm(initial=set_sorting_type)
 
     elif request.method == "GET":
-        """
-        GET
-        REQUEST
-        OF PAGE
-        Product
-        Selection
-        Form
-        """
         paginator = Paginator(Product.objects.all(), 50)
         page_number = request.GET.get("page")
         paginator_control_with_products_queryset = paginator.get_page(page_number)
         paginated_form = ProductSelectForFinalFeedForm(
             paginator_control_with_products_queryset
         )
-        context = {
-            "feed": feed,
-            "form": paginated_form,
-            "paginator_control": paginator_control_with_products_queryset,
-            # "feed_config_form": feed_config_form,
-        }
-        return HttpResponse(template.render(context, request))
-    print(request.POST)
-    print(request.POST)
-    print(request.POST)
-    print(request.POST)
+
+    """
+    CONTEXT
+    FOR PAGE
+    """    
+    if not 'sort_type' in locals():
+        sort_type: str = 'Sort by'
+    if not 'sorting_option_form' in locals():
+        sorting_option_form = SortingSelectForm()
+    
+    context = {
+        "feed": feed,
+        "found_products_count": paginator.count,
+        "sort_type": sort_type,
+        "sorting_option_form": sorting_option_form,
+        "form": paginated_form,
+        "paginator_control": paginator_control_with_products_queryset,
+        # "feed_config_form": feed_config_form,
+    }
+    return HttpResponse(template.render(context, request))
