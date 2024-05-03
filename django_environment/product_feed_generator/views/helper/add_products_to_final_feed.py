@@ -42,7 +42,7 @@ def from_serverkast_feed(request, shop_name):
             )
     feed = Feed.objects.get(shop_name=shop_name)
     all_updated_products = Serverkast_Product.objects.all()
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     # has to be identical to field in product_feed_generator/forms/serverkast_product_select_for_final_feed_form.py
     init = {
         "%s ––– %s" % (row.ean, row.name): row.is_selected
@@ -63,7 +63,7 @@ def from_serverkast_feed(request, shop_name):
     checked
     products (in db)
     """
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     selected_products_from_topsystems_products_list = TopSystemsProduct.objects.filter(
         is_selected=True
     ).values()
@@ -125,7 +125,7 @@ def from_topsystems_feed(request, shop_name):
             )
     feed = Feed.objects.get(shop_name=shop_name)
     all_updated_products = TopSystemsProduct.objects.all()
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     # has to be identical to field in product_feed_generator/forms/serverkast_product_select_for_final_feed_form.py
     init = {
         "%s ––– %s" % (row.ean, row.name): row.is_selected
@@ -146,7 +146,7 @@ def from_topsystems_feed(request, shop_name):
     checked
     products (in db)
     """
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     selected_products_from_topsystems_products_list = TopSystemsProduct.objects.filter(
         is_selected=True
     ).values()

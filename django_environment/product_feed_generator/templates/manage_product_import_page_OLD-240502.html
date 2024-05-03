@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+{% load i18n static customfilters %}
+
+{% block head %}
+
+<head>
+    <title>Product Feed Creator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
+    <link rel="stylesheet"
+          href="{% static 'custom-bootstrap/custom.css' %}">
+    <script src="{% static 'bootstrap-5.3.2/dist/js/bootstrap.js' %}"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/js/fontawesome.min.js "></script>
+    <link href=" https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css "
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+</head>
+<style>
+    /* .list-group .list-group-item {
+        border-radius: 0;
+        cursor: move;
+    }
+
+    .list-group .list-group-item:hover {
+        background-color: #f7f7f7;
+    } */
+    .handle {
+        cursor: grab;
+    }
+</style>
+{% if message %}
+<script>
+    alert('{{ message }}');
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div id="cloning"
+         class="row"
+         style="margin-top: 100px !important; margin-bottom: 100px;">
+        <p class="d-inline-flex gap-1">
+            <a href="{% url 'master_list_page' shop_name %}"
+               class="btn btn-primary"> Back to Product Selector for {{shop_name}} Feed</a>
+        </p>
+        <!--
+            credentials form
+            if shop file
+            is protected
+        -->
+        {% if shop_name == 'IngramMicro' %}
+        <p class="d-inline-flex gap-1">
+            <button class="btn btn-primary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample"
+                    aria-expanded="false"
+                    aria-controls="collapseExample">
+                Add Credentials for protected Product Feed
+            </button>
+        </p>
+        <div class="collapse"
+             id="collapseExample">
+            <div class="my-2"
+                 style="border: solid; border-width: 1px;">
+                <form class=""
+                      method="POST">
+                    <div class="modal-body">
+                        {{ credentials_form.as_p }}
+                    </div>
+                    <input class="my-2"
+                           type="submit"
+                           name="save-protection-credentials"
+                           value="Save SFTP and XML Credentials" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        <!--
+            hidden form
+            for schema
+            without
+            custom calc
+            units
+        -->
+        <form id="save-schema-form"
+              action=""
+              method="POST"
+              class="form-example">
+            <div class="form-example"
+                 style="display: none;">
+                <input type="text"
+                       name="finalFeedProductSchemaWithoutCustomCalcUnits"
+                       id="finalFeedProductSchemaWithoutCustomCalcUnits"
+                       required />
+                <input type="text"
+                       name="finalFeedCustomCalcUnits"
+                       id="finalFeedCustomCalcUnits"
+                       required />
+            </div>
+            <div class="form-example">
+                <input type="submit"
+                       form="save-schema-form"
+                       name="save-schema-config"
+                       value="Save Schema" />
+                <p class="my-4">{% if update_message %}
+                    {{update_message}}
+                    {% endif %}</p>
+            </div>
+        </form>
+        <div class="container text-center">
+            <div class="row h-100">
+                <!--
+                    Selectable
+                    Fields
+                -->
+                <div class="col border m-2"
+                     style="min-height: 150vh;">
+                    <h4 class="my-3">Fields</h4>
+                    <div id="availableFieldsElement"
+                         class="list-group col">
+                        {% for field in availableFields %}
+                        <div id="{{field}}"
+                             class="list-group-item"><i class="bi bi-arrows-move handle float-start"></i>{{field}}
+                            <button class="btn btn-danger btn-sm rounded-0 float-end trash-button"
+                                    onclick="removeThisElementFromFinalFeedSchema(this)"
+                                    type="button"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Delete"><i class="bi bi-trash"></i></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <h4 class="my-3">Operators</h4>
+                    <div id="operatorsElement"
+                         class="list-group col">
+                        {% for operation in operators %}
+                        <div id="{{operation.0}}"
+                             class="list-group-item {% if operation.0 == 'custom_value' %}custom_value_field{% endif %}"><i class="bi bi-arrows-move handle float-start"></i>{{operation.1}}
+
+                            <button class="btn btn-danger btn-sm rounded-0 float-end trash-button"
+                                    onclick="removeThisElementFromFinalFeedSchema(this)"
+                                    type="button"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Delete"><i class="bi bi-trash"></i></button>
+                            {% if operation.0 == 'custom_value' %}
+                            <label>put value before dragging</label>
+                            <input type="text"
+                                   name="{{operation.0}}" />
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!--
+                    Destination
+                    for
+                    Fields
+                -->
+                <div class="col border m-2">
+                    <h4 class="my-3">Drop fields here to build your product schema</h4>
+                    <div id="finalFeedSchemaElement"
+                         class="list-group col"
+                         ondrop="addToFinalFeedSchema(this)">
+                        {% for field in current_product_schema_for_final_feed %}
+                        <div id="{{field}}"
+                             class="list-group-item"><i class="bi bi-arrows-move handle float-start"></i>{{field}}
+                            <button class="btn btn-danger btn-sm rounded-0 float-end trash-button"
+                                    onclick="removeThisElementFromFinalFeedSchema(this)"
+                                    type="button"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Delete"><i class="bi bi-trash"></i></button>
+                            <button type="button"><i class="bi bi-pencil"></i></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!--
+                    CUSTOM
+                    CALC
+                    FIELDS
+                    -->
+                <div class="col border m-2">
+                    <h4 class="my-3">Custom Calculation/Text Fields</h4>
+                    <p style="line-height: 1;">Note: Please Save Schema For Every New Custom Calc Field. Also save for every new Custom Value inside the Custom Calc Field.</p>
+                    <div class="list-group col my-3">
+                        <form id="add_custom_calc_field"
+                              method="post"
+                              class="">
+                            <button form="add_custom_calc_field"
+                                    class="btn btn-primary my-2 w-100 p-0"
+                                    name="add_custom_calc_field"><i class="bi bi-plus"
+                                   style="font-size: 30px;"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% for CustomCalcUnit in CustomCalcUnits %}
+                    <div class="border border-primary my-2">
+                        <div class="form-example my-3">
+                            <form id="remove_custom_calc_field_form_{{ forloop.counter0 }}"
+                                  action=""
+                                  method="POST"
+                                  class="form-example">
+                                <div class="form-example"
+                                     style="display: none;">
+                                    <input type="text"
+                                           name="customCalcUnitIndex"
+                                           id="customCalcUnitIndex_{{ forloop.counter0 }}"
+                                           value="{{ forloop.counter0 }}"
+                                            />
+                                </div>
+                                <div class="form-example">
+                                    <input type="submit" style="background-color: #dc3545; color: white;"
+                                    id="remove_custom_calc_field_form_{{ forloop.counter0 }}"
+                                           name="remove_custom_calc_field"
+                                           value="Remove Custom Calc Field" />
+                                </div>
+                            </form>
+                            <label for="name">Field Name: </label><br>
+                            <input id="customCalculationFieldNameInput_{{CustomCalcUnit.custom_calc_field_name}}"
+                                   style="width: 350px;"
+                                   type="text"
+                                   onchange="addToCustomCalcDragDrop(this)"
+                                   placeholder="type field name used in final feed"
+                                   value="{{CustomCalcUnit.custom_calc_field_name|clear_if_placeholder}}" />
+                        </div>
+                        <div class="list-group col"
+                             style="min-height: 80px;">
+                            <!-- custom drag & drop areas emerge here -->
+                            <div id="dragDropArea_{{CustomCalcUnit.custom_calc_field_name}}"
+                                 class="list-group list-group-calc-field col my-4"
+                                 ondrop="addToCustomCalcDragDrop(this)">
+                                {% for calculation_element in CustomCalcUnit.calculation_elements %}
+                                <div id="calcElement_{{calculation_element}}"
+                                     class="list-group-item"><i
+                                       class="bi bi-arrows-move handle float-start"></i>{{calculation_element}}
+                                    <button class="btn btn-danger btn-sm rounded-0 float-end trash-button"
+                                            onclick="removeThisElementFromFinalFeedSchema(this)"
+                                            type="button"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Delete"><i class="bi bi-trash"></i></button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+<script type="text/javascript">
+    const CustomCalcUnits = {{ CustomCalcUnitsJson }}
+
+    function updateFinalFeedSchema() {
+        var final_feed_schema = [];
+        var custom_calc_units = [];
+        var fieldsForFinalFeedSchema = document.querySelectorAll("#finalFeedSchemaElement .list-group-item");
+        var final_feed_schema_json_object = {}
+        for (i = 0; i < fieldsForFinalFeedSchema.length; i++) {
+            final_feed_schema.push(fieldsForFinalFeedSchema[i].id);
+            eval('final_feed_schema_json_object.' + fieldsForFinalFeedSchema[i].id + '=""')
+        }
+        // console.log(JSON.stringify(final_feed_schema_json_object))
+        document.getElementById('finalFeedProductSchemaWithoutCustomCalcUnits').value = JSON.stringify(final_feed_schema_json_object);
+
+        /*
+        Read the updated
+        values for every
+        CustomCalcUnit
+        and set it up
+        for being sent
+        */
+        var custom_calculation_units = []
+        for (i = 0; i < CustomCalcUnits.length; i++) {
+            var calculation_elements = [];
+            var partsOfCustomCalcUnit = document.querySelectorAll('#dragDropArea_' + CustomCalcUnits[i].custom_calc_field_name + " .list-group-item");
+            if (document.getElementById('customCalculationFieldNameInput_' + CustomCalcUnits[i].custom_calc_field_name).value == ""){
+                var customCalculationFieldName_dirty = document.getElementById('customCalculationFieldNameInput_' + CustomCalcUnits[i].custom_calc_field_name).id
+                var customCalculationFieldName = customCalculationFieldName_dirty.replace('customCalculationFieldNameInput_','');
+            } else {
+                var customCalculationFieldName = document.getElementById('customCalculationFieldNameInput_' + CustomCalcUnits[i].custom_calc_field_name).value
+            }      
+            // if custom value field, read out input tag   
+            for (j = 0; j < partsOfCustomCalcUnit.length; j++) {
+                if (partsOfCustomCalcUnit[j].id == "custom_value") {
+                    calculation_elements.push("custom_value_" + partsOfCustomCalcUnit[j].getElementsByTagName('input')[0].value);
+                } else {
+                    calculation_elements.push(partsOfCustomCalcUnit[j].innerText);
+                }
+            }
+            custom_calculation_units.push({ "custom_calc_field_name": customCalculationFieldName, "calculation_elements": calculation_elements });
+            // var calculation_elements = calculation_elements.join("-");
+            // custom_calc_units.push(calculation_elements);
+            // console.log(custom_calculation_units)
+        }
+        document.getElementById('finalFeedCustomCalcUnits').value = JSON.stringify(custom_calculation_units);
+    }
+    function addToCustomCalcDragDrop() {
+        //show trash buttons in the custom area
+        updateVisibiltyOfTrashButtons()
+        //add to final feed schema
+        updateFinalFeedSchema()
+    }
+
+    /*
+    Dynamically add
+    drag and drop
+    areas for 
+    CustomCalcUnits
+    from the
+    database
+    */
+    for (i = 0; i < CustomCalcUnits.length; i++) {
+        new Sortable(eval('dragDropArea_' + CustomCalcUnits[i].custom_calc_field_name), {
+            handle: '.handle',
+            group: {
+                name: 'shared',
+                pull: 'clone'
+            },
+            animation: 150
+        });
+    }
+
+    function updateVisibiltyOfTrashButtons() {
+        var trashButtons = document.getElementsByClassName('trash-button');
+        var availableFieldsElement = document.getElementById('availableFieldsElement');
+        var finalFeedSchemaElement = document.getElementById('finalFeedSchemaElement');
+        // var customDragDropArea1Element = document.getElementById('customDragDropArea1Element');
+        for (var i = 0; i < trashButtons.length; i++) {
+            if (availableFieldsElement.contains(trashButtons.item(i))) {
+                trashButtons.item(i).style.visibility = 'hidden';
+            }
+            if (operatorsElement.contains(trashButtons.item(i))) {
+                trashButtons.item(i).style.visibility = 'hidden';
+            }
+            if (finalFeedSchemaElement.contains(trashButtons.item(i))) {
+                trashButtons.item(i).style.visibility = 'visible';
+            }
+            // if (customDragDropArea1Element.contains(trashButtons.item(i))) {
+            //     trashButtons.item(i).style.visibility = 'visible';
+            // }
+        }
+    }
+    //remove the element which is clicked on
+    function removeThisElementFromFinalFeedSchema(element) {
+        element.parentElement.remove();
+        updateFinalFeedSchema()
+    }
+    addToFinalFeedSchema()
+    function addToFinalFeedSchema() {
+        //hide trash buttons on the left
+        updateVisibiltyOfTrashButtons()
+        //add to final feed schema
+        updateFinalFeedSchema()
+    }
+    new Sortable(availableFieldsElement, {
+        handle: '.handle',
+        group: {
+            name: 'shared',
+            pull: 'clone',
+            put: false
+        },
+        animation: 150,
+        sort: false
+    });
+    new Sortable(operatorsElement, {
+        handle: '.handle',
+        group: {
+            name: 'shared',
+            pull: 'clone',
+            put: false
+        },
+        animation: 150,
+        sort: false
+    });
+    new Sortable(finalFeedSchemaElement, {
+        handle: '.handle',
+        group: {
+            name: 'shared',
+            pull: 'clone'
+        },
+        animation: 150
+    });
+</script>
+{% endblock %}

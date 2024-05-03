@@ -5,7 +5,7 @@ and import them
 to the database
 """
 from urllib.request import Request
-from product_feed_generator.models import Feed, Serverkast_Product, IngramMicroProduct
+from product_feed_generator.models import Feed, Product
 from urllib.parse import urlparse
 import paramiko
 from decimal import Decimal
@@ -19,7 +19,7 @@ def from_ingrammicro_feed(request, shop_name):
     feed_conf_from_current_shop = FeedConfiguration.objects.get(
         feed=feed_from_current_shop
     )
-    form_for_final_feed_products = IngramMicroProductSelectForFinalFeedForm()
+    form_for_final_feed_products = ProductSelectForFinalFeedForm()
     # initial = {
     #     "xml_user": feed_conf_from_current_shop.xml_user,
     #     "xml_pass": feed_conf_from_current_shop.xml_pass,
@@ -49,7 +49,7 @@ def from_ingrammicro_feed(request, shop_name):
     sftp.get("PRICE.TXT", "price.csv")
     # filename = "price_dummy.csv"
     filename = "price.csv"
-    IngramMicroProduct.objects.all().delete()
+    Product.objects.all().delete()
     product_list = []
     with open(filename, "r") as csvfile:
         datareader = csv.reader(csvfile)
@@ -61,7 +61,7 @@ def from_ingrammicro_feed(request, shop_name):
             # in_stock = get_availability(ingram_part_number_for_xml_request)
             # print(in_stock)
             product_list.append(
-                IngramMicroProduct(
+                Product(
                     feed=feed_from_current_shop,
                     is_selected=False,
                     ingram_part_number=row[0],
@@ -73,7 +73,7 @@ def from_ingrammicro_feed(request, shop_name):
                 )
             )
     # print(product_list)
-    IngramMicroProduct.objects.bulk_create(product_list)
+    Product.objects.bulk_create(product_list)
 
     sftp.close()
     # return the context

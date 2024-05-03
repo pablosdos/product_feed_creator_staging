@@ -5,9 +5,7 @@ from django.utils.safestring import mark_safe
 from product_feed_generator.models import (
     Feed,
     FeedConfiguration,
-    Serverkast_Product,
-    TopSystemsProduct,
-    IngramMicroProduct,
+    Product
 )
 OPERATORS = [
     ("+", "+"),
@@ -64,11 +62,11 @@ def _sync_feed_conf_from_database(request, shop_name):
         feed=feed_from_current_shop_for_filtering
     ).product_schema_for_final_feed
     if shop_name == "Serverkast":
-        allFieldsOfProduct = Serverkast_Product._meta.fields[:]
+        allFieldsOfProduct = Product._meta.fields[:]
     elif shop_name == "TopSystems":
-        allFieldsOfProduct = TopSystemsProduct._meta.fields[:]
+        allFieldsOfProduct = Product._meta.fields[:]
     elif shop_name == "IngramMicro":
-        allFieldsOfProduct = IngramMicroProduct._meta.fields[:]
+        allFieldsOfProduct = Product._meta.fields[:]
     availableFieldsList = []
     for field in allFieldsOfProduct:
         availableFieldsList.append(field.name)

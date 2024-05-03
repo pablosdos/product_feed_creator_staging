@@ -1,5 +1,4 @@
 from django import forms
-from product_feed_generator.models import Serverkast_Product, TopSystemsProduct, IngramMicroProduct
 
 class ProductSelectForFinalFeedForm(forms.Form):
     def __init__(self, page_of_products, *args, **kwargs):

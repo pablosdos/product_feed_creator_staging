@@ -1,5 +1,5 @@
 from django import template
-from product_feed_generator.models import Serverkast_Product, TopSystemsProduct, IngramMicroProduct, Product
+from product_feed_generator.models import Product
 import requests
 
 register = template.Library()
@@ -19,6 +19,10 @@ def clearIfPlaceholder(value):
         return ""
     else:
         return value
+    
+@register.filter(name="get_feed_product_count", is_safe=True)
+def getFeedProductCount(shop_name):
+    return Product.objects.filter(feed=shop_name).count()
 
 @register.simple_tag
 def tag_get_product_data(id_with_feed_source):

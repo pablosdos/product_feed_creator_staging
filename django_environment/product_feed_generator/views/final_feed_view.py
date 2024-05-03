@@ -5,7 +5,7 @@ import urllib.request
 from urllib.request import Request
 import json
 from dicttoxml import dicttoxml
-from product_feed_generator.models import Serverkast_Product
+# from product_feed_generator.models import Serverkast_Product
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 

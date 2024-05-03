@@ -6,7 +6,7 @@ to the database
 """
 
 from urllib.request import Request
-from product_feed_generator.models import Feed, Serverkast_Product, TopSystemsProduct
+from product_feed_generator.models import Feed, Product
 import urllib.request
 import xmltodict
 import csv
@@ -73,8 +73,8 @@ def from_serverkast_feed(request, shop_name):
                 "url_more_info": item["url_more_info"],
                 "shipmentby": item.get("shipmentby", "unknown"),
             }
-            new_product_list.append(Serverkast_Product(**product_data))
-    old_products = Serverkast_Product.objects.all()
+            new_product_list.append(Product(**product_data))
+    old_products = Product.objects.all()
     old_products_names = [old_product.name for old_product in old_products]
     new_products_names = [new_product.name for new_product in new_product_list]
     list_of_newly_added_product_names = []
@@ -91,7 +91,7 @@ def from_serverkast_feed(request, shop_name):
     it with updated ones
     (select new products)
     """
-    Serverkast_Product.objects.all().delete()
+    Product.objects.all().delete()
     for item in products:
         if not ("gross_price" in item):
             pass
@@ -122,10 +122,10 @@ def from_serverkast_feed(request, shop_name):
                 "url_more_info": item["url_more_info"],
                 "shipmentby": item.get("shipmentby", "unknown"),
             }
-            Serverkast_Product.objects.create(**product_data)
+            Product.objects.create(**product_data)
     for newly_added_product_name in list_of_newly_added_product_names:
 
-        product_for_update = Serverkast_Product.objects.get(name=newly_added_product_name)
+        product_for_update = Product.objects.get(name=newly_added_product_name)
         product_for_update.is_selected = True
         product_for_update.save()
     return request
@@ -163,16 +163,16 @@ def from_topsystems_feed(request, shop_name):
             "ean":item[8],
             "current_stock":item[32],
         }
-        new_product_list.append(TopSystemsProduct(**product_data))
+        new_product_list.append(Product(**product_data))
     file.close()
     # print(all_new_created_products)
-    form = TopSystemsProductSelectForFinalFeedForm()
+    form = ProductSelectForFinalFeedForm()
     # print(form)
     context = {
         "feed": feed,
         "form": form,
     }
-    old_products = TopSystemsProduct.objects.all()
+    old_products = Product.objects.all()
     old_products_names = [old_product.name for old_product in old_products]
     new_products_names = [new_product.name for new_product in new_product_list]
     list_of_newly_added_product_names = []
@@ -193,7 +193,7 @@ def from_topsystems_feed(request, shop_name):
     it with updated ones
     (select new products)
     """
-    TopSystemsProduct.objects.all().delete()
+    Product.objects.all().delete()
     for item in data:
         sales_price_excluding_tax = Decimal(item[21].split(" EUR")[0].strip(' "'))
         product_data = {
@@ -210,10 +210,10 @@ def from_topsystems_feed(request, shop_name):
             "ean":item[8],
             "current_stock":item[32],
         }
-        TopSystemsProduct.objects.create(**product_data)
+        Product.objects.create(**product_data)
     # print(TopSystemsProduct.objects.get(name='MG SmartLink Connect'))
     for newly_added_product_name in list_of_newly_added_product_names:
-        product_for_update = TopSystemsProduct.objects.get(name=newly_added_product_name)
+        product_for_update = Product.objects.get(name=newly_added_product_name)
         product_for_update.is_selected = True
         product_for_update.save()
     return context
@@ -221,7 +221,7 @@ def from_topsystems_feed(request, shop_name):
 
 def from_ingrammicro_feed(request, shop_name):
     feed = Feed.objects.get(shop_name=shop_name)
-    form = IngramMicroProductSelectForFinalFeedForm()
+    form = ProductSelectForFinalFeedForm()
 
     context = {
         "feed": feed,

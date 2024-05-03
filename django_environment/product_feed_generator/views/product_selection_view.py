@@ -25,7 +25,7 @@ from django.db.models import Q
 @login_required
 def product_selection_view(request, shop_name):
     feed = Feed.objects.get(shop_name=shop_name)
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     """
     Configuration
     Form

@@ -1,7 +1,5 @@
 from product_feed_generator.models import (
     Feed,
-    Serverkast_Product,
-    TopSystemsProduct,
 )
 from dicttoxml import dicttoxml
 from django.template.loader import get_template
@@ -12,7 +10,8 @@ from product_feed_generator.views.helper import *
 
 def from_serverkast_feed(request, shop_name):
     feed = Feed.objects.get(shop_name=shop_name)
-    form = ServerkastProductSelectForFinalFeedForm(request.POST)
+    # form = ServerkastProductSelectForFinalFeedForm(request.POST)
+    form = SortingSelectForm()
     if (feed.auto_add_new_products_cronjob_active):
         # print(request.POST)
         add_new_products(request, shop_name)
@@ -37,13 +36,14 @@ def from_serverkast_feed(request, shop_name):
     # print(xxx)
 
     all_updated_products = Serverkast_Product.objects.all()
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     # has to be identical to field in product_feed_generator/forms/serverkast_product_select_for_final_feed_form.py
     init = {
         "%s ––– %s" % (row.ean, row.name): row.is_selected
         for row in all_updated_products
     }
-    form = ServerkastProductSelectForFinalFeedForm(init)
+    # form = ServerkastProductSelectForFinalFeedForm(init)
+    form = SortingSelectForm()
     context = {
         "feed": feed,
         "products": all_updated_products,
@@ -58,7 +58,7 @@ def from_serverkast_feed(request, shop_name):
     checked
     products (in db)
     """
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     selected_products_from_topsystems_products_list = TopSystemsProduct.objects.filter(
         is_selected=True
     ).values()
@@ -101,7 +101,8 @@ def from_serverkast_feed(request, shop_name):
 
 def from_topsystems_feed(request, shop_name):
     feed = Feed.objects.get(shop_name=shop_name)
-    form = TopSystemsProductSelectForFinalFeedForm(request.POST)
+    # form = TopSystemsProductSelectForFinalFeedForm(request.POST)
+    form = SortingSelectForm()
 
     if (feed.auto_add_new_products_cronjob_active):
         # print(request.POST)
@@ -120,7 +121,7 @@ def from_topsystems_feed(request, shop_name):
             )
 
     all_updated_products = TopSystemsProduct.objects.all()
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     # has to be identical to field in product_feed_generator/forms/serverkast_product_select_for_final_feed_form.py
     init = {
         "%s ––– %s" % (row.ean, row.name): row.is_selected
@@ -141,7 +142,7 @@ def from_topsystems_feed(request, shop_name):
     checked
     products (in db)
     """
-    template = get_template("product_selection_page.html")
+    template = get_template("master_list_page.html")
     selected_products_from_topsystems_products_list = TopSystemsProduct.objects.filter(
         is_selected=True
     ).values()

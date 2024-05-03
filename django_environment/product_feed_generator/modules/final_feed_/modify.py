@@ -3,8 +3,7 @@ from decimal import Decimal
 from product_feed_generator.models import (
     Feed,
     FeedConfiguration,
-    Serverkast_Product,
-    TopSystemsProduct,
+    Product
 )
 
 
@@ -21,10 +20,11 @@ def _apply_configuration_scheme(selected_products_list, shop_name) -> list:
     current_product_schema_for_final_feed = json.loads(
         current_product_schema_for_final_feed
     ).keys()
-    if shop_name == "Serverkast":
-        allFieldsOfProduct = Serverkast_Product._meta.fields[:]
-    elif shop_name == "TopSystems":
-        allFieldsOfProduct = TopSystemsProduct._meta.fields[:]
+    # if shop_name == "Serverkast":
+    #     allFieldsOfProduct = Serverkast_Product._meta.fields[:]
+    # elif shop_name == "TopSystems":
+    #     allFieldsOfProduct = TopSystemsProduct._meta.fields[:]
+    allFieldsOfProduct = Product._meta.fields[:]
     allOriginalAttributesOfList = []
     for field in allFieldsOfProduct:
         allOriginalAttributesOfList.append(field.name)

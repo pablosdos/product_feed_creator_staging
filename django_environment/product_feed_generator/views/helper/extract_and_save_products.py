@@ -5,7 +5,7 @@ and import them
 to the database
 """
 from urllib.request import Request
-from product_feed_generator.models import Feed, Serverkast_Product, TopSystemsProduct, Product
+from product_feed_generator.models import Feed, Product
 import urllib.request
 import xmltodict
 import csv
@@ -34,7 +34,7 @@ def from_serverkast_feed(request, shop_name):
     file.close()
     data = xmltodict.parse(data)
     products = data["rss"]["channel"]["item"]
-    Serverkast_Product.objects.all().delete()
+    Product.objects.all().delete()
     for item in products:
         if not ("gross_price" in item):
             pass
@@ -57,7 +57,7 @@ def from_serverkast_feed(request, shop_name):
                 current_stock=item["current_stock"],
             )
     # print(json.dumps(items[0], indent=4))
-    form = ServerkastProductSelectForFinalFeedForm()
+    form = ProductSelectForFinalFeedForm()
     # print(form)
     context = {
         "feed": feed,
@@ -73,7 +73,7 @@ def from_topsystems_feed(request, shop_name):
     file = urllib.request.urlopen(feed_request)
     csvfile = csv.reader(io.StringIO(file.read().decode("utf-8")), delimiter=",")
     header = next(csvfile)
-    TopSystemsProduct.objects.all().delete()
+    Product.objects.all().delete()
     # print(header)
     data = list(csvfile)
     # print(data)
@@ -95,7 +95,7 @@ def from_topsystems_feed(request, shop_name):
         )
     file.close()
     # print(all_new_created_products)
-    form = TopSystemsProductSelectForFinalFeedForm()
+    form = ProductSelectForFinalFeedForm()
     # print(form)
     context = {
         "feed": feed,
@@ -105,7 +105,7 @@ def from_topsystems_feed(request, shop_name):
 
 def from_ingrammicro_feed(request, shop_name):
     feed = Feed.objects.get(shop_name=shop_name)
-    form = IngramMicroProductSelectForFinalFeedForm()
+    form = ProductSelectForFinalFeedForm()
     
     context = {
         "feed": feed,
