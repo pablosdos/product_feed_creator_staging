@@ -132,7 +132,7 @@ STATIC_ROOT = '/Users/paulkluge/Documents/Work/Codebase/Offgridcentrum/product_f
 LOCATION_OF_FINAL_FEED_FILE = "product_feed_generator/static/final-feed-file.xml"
 DEBUG = True
 # PRODUCTION
-# STATIC_ROOT = '/home/datafeeds/django_environment/static'
+# STATIC_ROOT = '/home/datafeeds/staging/django_environment/static'
 # LOCATION_OF_FINAL_FEED_FILE = "static/final-feed-file.xml"
 # DEBUG = True
 
