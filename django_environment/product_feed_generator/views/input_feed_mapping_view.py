@@ -2,13 +2,9 @@ from django.template.loader import get_template
 from django.http import HttpResponse
 import json
 from product_feed_generator.modules.final_feed_.base import FinalFeed_
-from django.utils.safestring import mark_safe 
+from django.utils.safestring import mark_safe
 from product_feed_generator.forms import *
-from product_feed_generator.models import (
-    Feed,
-    FeedConfiguration,
-    Product
-)
+from product_feed_generator.models import Feed, FeedConfiguration, Product
 from django.contrib.auth.decorators import login_required
 
 OPERATORS = [
@@ -34,16 +30,28 @@ def input_feed_mapping_view(request, shop_name):
     context = {}
     feeds = Feed.objects.all()
     feed_from_current_shop_for_filtering = Feed.objects.get(shop_name=shop_name)
-    feed_conf_from_current_shop = FeedConfiguration.objects.get(
-        feed=feed_from_current_shop_for_filtering
-    )
-    feed_conf_from_current_shop_for_updating = FeedConfiguration.objects.filter(
-        feed=feed_from_current_shop_for_filtering
-    )
+    try:
+        feed_conf_from_current_shop = FeedConfiguration.objects.get(
+            feed=feed_from_current_shop_for_filtering
+        )
+        feed_conf_from_current_shop_for_updating = FeedConfiguration.objects.filter(
+            feed=feed_from_current_shop_for_filtering
+        )
+    except:
+        feed_conf_from_current_shop = FeedConfiguration.objects.create(
+            feed=feed_from_current_shop_for_filtering,
+            product_schema_for_final_feed='{"name":"","main_image":"","shipping_weight":""}',
+            custom_calculation_units_list='[{"custom_calc_field_name":"retail_price_excluding_tax","calculation_elements":["sales_price_excluding_tax","/","custom_value_121","*","custom_value_100"]},{"custom_calc_field_name":"cost_price","calculation_elements":["sales_price_excluding_tax","*","custom_value_0.65"]}]',
+        )
+        feed_conf_from_current_shop_for_updating = FeedConfiguration.objects.filter(
+            feed=feed_from_current_shop_for_filtering
+        )
     current_product_schema_for_final_feed = FeedConfiguration.objects.get(
         feed=feed_from_current_shop_for_filtering
     ).product_schema_for_final_feed
-    allFieldsOfProduct = json.loads(feed_from_current_shop_for_filtering.available_fields) 
+    allFieldsOfProduct = json.loads(
+        feed_from_current_shop_for_filtering.available_fields
+    )
     # if shop_name == "Serverkast":
     #     allFieldsOfProduct = Serverkast_Product._meta.fields[:]
     # elif shop_name == "TopSystems":
@@ -67,7 +75,13 @@ def input_feed_mapping_view(request, shop_name):
     print(current_product_schema_for_final_feed)
     # print(json.mark_safe(feed_conf_from_current_shop.custom_calculation_units_list))
     context.update({"CustomCalcUnits": custom_calculation_units_list}),
-    context.update({"CustomCalcUnitsJson": mark_safe(feed_conf_from_current_shop.custom_calculation_units_list)}),
+    context.update(
+        {
+            "CustomCalcUnitsJson": mark_safe(
+                feed_conf_from_current_shop.custom_calculation_units_list
+            )
+        }
+    ),
     context.update({"feeds": feeds}),
     context.update({"shop_name": shop_name}),
     context.update({"availableFields": availableFieldsList}),
@@ -79,13 +93,27 @@ def input_feed_mapping_view(request, shop_name):
     template = get_template("input_feed_mapping_page.html")
     # provide for IngramMicro additionally credentials_form
     initial = {
-        "xml_user": feed_conf_from_current_shop.xml_user,
-        "xml_pass": feed_conf_from_current_shop.xml_pass,
-        "sftp_url": feed_conf_from_current_shop.sftp_url,
+        # "xml_user": feed_conf_from_current_shop.xml_user,
+        # "xml_pass": feed_conf_from_current_shop.xml_pass,
+        # "sftp_url": feed_conf_from_current_shop.sftp_url,
     }
     credentials_form = SftpXmlCredentialsForm(initial)
     context.update({"credentials_form": credentials_form}),
-    product_fields: list[str] = ["sku", "name", "short_desc", "long_description", "shipping_weight", "main_image", "extra_image_1", "sales_price_excluding_tax", "brand", "ean", "current_stock", "url_more_info", "shipmentby"]
+    product_fields: list[str] = [
+        "sku",
+        "name",
+        "short_desc",
+        "long_description",
+        "shipping_weight",
+        "main_image",
+        "extra_image_1",
+        "sales_price_excluding_tax",
+        "brand",
+        "ean",
+        "current_stock",
+        "url_more_info",
+        "shipmentby",
+    ]
     context.update({"product_fields": product_fields}),
     # adding custom calc field
     # if "add_custom_calc_field" in request.POST:

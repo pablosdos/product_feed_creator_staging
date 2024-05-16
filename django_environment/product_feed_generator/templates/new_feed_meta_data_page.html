@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% load i18n static customfilters %}
+
+{% block head %}
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=Raleway"
+      rel="stylesheet">
+<title>Product Feed Creator</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible"
+      content="ie=edge">
+<link rel="stylesheet"
+      href="{% static 'custom-bootstrap/custom.css' %}">
+<script src="{% static 'bootstrap-5.3.2/dist/js/bootstrap.js' %}"></script>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #f1f1f1;
+    }
+
+    #regForm {
+        background-color: #ffffff;
+        margin: 100px auto;
+        font-family: Raleway;
+        padding: 80px;
+        width: 70%;
+        min-width: 300px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    input {
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
+    }
+
+    /* Mark input boxes that gets an error on validation: */
+    input.invalid {
+        background-color: #ffdddd;
+    }
+
+    /* Hide all steps by default: */
+    /* .tab {
+        display: none;
+    } */
+
+    button {
+        background-color: #04AA6D;
+        color: #ffffff;
+        border: none;
+        /* padding: 10px 20px;
+        font-size: 17px; */
+        font-family: Raleway;
+        cursor: pointer;
+    }
+
+
+    .control-button {
+        background-color: #04AA6D;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 17px;
+        font-family: Raleway;
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    #prevBtn {
+        background-color: #bbbbbb;
+    }
+
+    /* Make circles that indicate the steps of the form: */
+    .step {
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
+    }
+
+    .step.active {
+        opacity: 1;
+    }
+
+    /* Mark the steps that are finished and valid: */
+    .step.finish {
+        background-color: #04AA6D;
+    }
+</style>
+
+<style>
+    .tags-input {
+        display: inline-block;
+        position: relative;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px;
+        box-shadow: 2px 2px 5px #00000033;
+        width: 100%;
+    }
+
+    .tags-input ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tags-input li {
+        display: inline-block;
+        background-color: #f2f2f2;
+        color: #333;
+        border-radius: 20px;
+        padding: 5px 10px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+
+    .tags-input input[type="text"] {
+        border: none;
+        outline: none;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .tags-input input[type="text"]:focus {
+        outline: none;
+    }
+
+    .tags-input .delete-button {
+        background-color: transparent;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<body>
+
+
+    <!-- <form action=""
+          method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit"
+               name="submit_new_feed_data"
+               value="Submit">
+    </form> -->
+
+
+    <form id="regForm"
+          action=""
+          method="post">
+        {% csrf_token %}
+        <h1 style="margin-bottom: 30px;">Setup Feed Assistant</h1>
+        <!-- One "tab" for each step in the form: -->
+        <div class="tab">
+
+
+            <div class="tab"> Feed Name (No Space!)
+                <p> {{ form.shop_name }}</p>
+            </div>
+            <div class="tab"> Input URL
+                <p> {{ form.input_url }}</p>
+            </div>
+            <div class="tab"> Input Type
+                <p> {{ form.input_type }}</p>
+            </div>
+            {{ form.available_fields }}
+            <div class="tab"> Which Fields You Want To Use? – Press Enter To Submit Tag
+                <p>
+
+                    <input type="text"
+                           id="input-tag"
+                           placeholder="Enter Field Name" />
+                </p>
+
+            </div>
+        </div>
+        <div style="height: 60px;">
+            <div class="tags-input">
+                <ul id="tags"></ul>
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="row"
+                 style="height: 120px; color: red;">
+                <div class="col-8">
+                    {% for error in form.shop_name.errors %}
+                    {{ error }}
+                    {% endfor %}
+                    <br>
+                    {% for error in form.input_type.errors %}
+                    Input Type: {{ error }}
+                    {% endfor %}
+                    <br>
+                    {% for error in form.available_fields.errors %}
+                    Feed Fields: {{ error }}
+                    {% endfor %}
+                    <br>
+
+                </div>
+                <div class="col-4">
+
+                    <div style="float:right;">
+                        <button type="button"
+                                class="control-button"
+                                id="prevBtn"
+                                onclick="nextPrev(-1)">Cancel</button>
+                        <button type="submit"
+                                class="control-button"
+                                id="nextBtn"
+                                name="nextBtn">Continue</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <script>
+        const tags = document.getElementById('tags');
+        const input = document.getElementById('input-tag');
+        const input_available_fields = document.getElementById('id_available_fields');
+        const tags_input_field = document.getElementsByClassName('tags-input')[0];
+        tags_input_field.style.display = 'none';
+        input_available_fields.value = '';
+
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                tags_input_field.style.display = 'block';
+                event.preventDefault();
+                const tag = document.createElement('li');
+                const tagContent = input.value.trim();
+                let isNewTagValue = true;
+                if (tagContent !== '') {
+                    const liElements = document.getElementsByTagName("li");
+                    Array.prototype.forEach.call(liElements, function (el) {
+                        if (el.innerHTML.split('<')[0] == tagContent) {
+                            isNewTagValue = false;
+                        }
+                    });
+                    if (isNewTagValue) {
+                        tag.innerText = tagContent;
+                        tag.innerHTML += '<button class="delete-button">X</button>';
+                        tags.appendChild(tag);
+                        if (input_available_fields.value == '') {
+                            input_available_fields.value = '"' + tagContent + '"';
+                        } else {
+                            input_available_fields.value = input_available_fields.value + ', "' + tagContent + '"';
+                        }
+                    }
+                    input.value = '';
+                }
+            }
+        });
+
+        tags.addEventListener('click', function (event) {
+            if (event.target.classList.contains('delete-button')) {
+                event.target.parentNode.remove();
+                const valueOfTag = event.srcElement.parentElement.innerHTML.split('<')[0];
+                let newInputText = input_available_fields.value.replace('"' + valueOfTag + '", ', '');
+                input_available_fields.value = newInputText;
+                newInputText = input_available_fields.value.replace('"' + valueOfTag + '"', '');
+                input_available_fields.value = newInputText;
+                if (input_available_fields.value == '') {
+                    tags_input_field.style.display = 'none';
+                }
+            }
+        }); 
+    </script>
+</body>
+
+{% endblock %}

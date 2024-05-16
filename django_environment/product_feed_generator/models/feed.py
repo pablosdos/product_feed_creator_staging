@@ -1,7 +1,7 @@
 from django.db import models
 
 class Feed(models.Model):
-    shop_name = models.CharField(max_length=63, verbose_name='Shop Name')
+    shop_name = models.CharField(max_length=63, verbose_name='Shop Name', unique=True)
     input_url = models.URLField(max_length=511, verbose_name='XML URL')
     input_type = models.CharField(max_length=63, verbose_name='Input Type')
     available_fields = models.TextField(max_length=1023, verbose_name='Available Fields')

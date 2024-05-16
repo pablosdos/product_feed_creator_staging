@@ -24,6 +24,7 @@ class FeedAdmin(admin.ModelAdmin):
         "available_fields",
         "products_last_updated",
         "products_update_cronjob_active",
+        "auto_add_new_products_cronjob_active",
     )
     list_display = (
         "shop_name",

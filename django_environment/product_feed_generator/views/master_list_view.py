@@ -30,9 +30,9 @@ def master_list_view(request):
     Form
     """
     initial = {
-        "retail_price_excluding_tax_division_value": feed.feedconfiguration.retail_price_excluding_tax_division_value,
-        "retail_price_excluding_tax_multiplication_value": feed.feedconfiguration.retail_price_excluding_tax_multiplication_value,
-        "cost_price_multiplication_value": feed.feedconfiguration.cost_price_multiplication_value,
+        # "retail_price_excluding_tax_division_value": feed.feedconfiguration.retail_price_excluding_tax_division_value,
+        # "retail_price_excluding_tax_multiplication_value": feed.feedconfiguration.retail_price_excluding_tax_multiplication_value,
+        # "cost_price_multiplication_value": feed.feedconfiguration.cost_price_multiplication_value,
     }
     # feed_config_form = FeedConfigForm(initial)
     """
