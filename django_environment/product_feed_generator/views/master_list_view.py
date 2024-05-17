@@ -12,6 +12,7 @@ from product_feed_generator.models import (
     FeedConfiguration,
     Product
 )
+from product_feed_generator.modules.final_feed_.base import FinalFeed_
 # from product_feed_generator.modules.final_feed_.base import FinalFeed_
 from product_feed_generator.forms import ProductSelectForFinalFeedForm, SortingSelectForm
 # from product_feed_generator.views.helper import *
@@ -22,8 +23,8 @@ from django.db.models import Q
 
 @login_required
 def master_list_view(request):
-    shop_name = 'Serverkast'
-    feed = Feed.objects.get(shop_name=shop_name)
+    # shop_name = 'Serverkast'
+    # feed = Feed.objects.get(shop_name=shop_name)
     template = get_template("master_list_page.html")
     """
     Configuration
@@ -40,6 +41,7 @@ def master_list_view(request):
     Auto
     Refresh
     """
+    # print(request.POST)
     if "toggle_auto_refresh_submit" in request.POST:
         pass
         # Feed.objects.filter(shop_name=shop_name).update(
@@ -97,13 +99,23 @@ def master_list_view(request):
     #     }
     #     return HttpResponse(template.render(context, request))
 
-    # elif "add_products_to_final_feed_submit" in request.POST:
-    #     finalfeed = FinalFeed_(shop_name)
-    #     # topsystems_finalfeed._apply_configuration_scheme(complete_topsystems_products_list)
-    #     context = finalfeed.save_xml_file(request)
-    #     # print(type(context))
-    #     del finalfeed
-    #     return HttpResponse(template.render(context, request))
+    elif "add-to-product-collection-form" in request.POST:
+        finalfeed = FinalFeed_()
+        # # topsystems_finalfeed._apply_configuration_scheme(complete_topsystems_products_list)
+        context = finalfeed.save_xml_file(request)
+        # # print(type(context))
+        # del finalfeed
+        # return HttpResponse(template.render(context, request))
+
+
+
+
+        paginator = Paginator(Product.objects.all(), 50)
+        page_number = request.GET.get("page")
+        paginator_control_with_products_queryset = paginator.get_page(page_number)
+        paginated_form = ProductSelectForFinalFeedForm(
+            paginator_control_with_products_queryset
+        )
 
     # elif "generate_refresh_submit" in request.POST:
     #     context = extract_and_save_products(request, shop_name)
@@ -249,7 +261,7 @@ def master_list_view(request):
         sorting_option_form = SortingSelectForm()
     feeds = Feed.objects.all()
     context = {
-        "feed": feed,
+        # "feed": feed,
         "feeds": feeds,
         "found_products_count": paginator.count,
         "sort_type": sort_type,

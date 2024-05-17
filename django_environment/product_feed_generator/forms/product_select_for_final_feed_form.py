@@ -10,4 +10,4 @@ class ProductSelectForFinalFeedForm(forms.Form):
         of the Product Model
         """
         for index, product in enumerate(page_of_products):
-            self.fields["%s ––– %s"%(product.id,product.feed)] = forms.BooleanField(required=False)
+            self.fields["%s ––– %s"%(product.id,product.name)] = forms.BooleanField(required=False, initial=product.is_selected)

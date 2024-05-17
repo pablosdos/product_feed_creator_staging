@@ -2,13 +2,16 @@ from product_feed_generator.modules.final_feed_.output.xml import (
     _add_products_to_final_feed,
 )
 from product_feed_generator.modules.final_feed_.output.database import (
-    _save_custom_calc_units_to_database, _remove_custom_calc_unit_from_database, _sync_feed_conf_from_database
+    _save_custom_calc_units_to_database,
+    _remove_custom_calc_unit_from_database,
+    _sync_feed_conf_from_database,
 )
 
+
 class FinalFeed_:
-    def __init__(_self, shop_name):
-        # self._shop_name = name
-        _self.shop_name = shop_name
+    # def __init__(_self):
+    # self._shop_name = name
+    # _self.shop_name = shop_name
 
     def save_xml_file(_self, unconfigured_product_list) -> dict:
         """
@@ -18,7 +21,8 @@ class FinalFeed_:
         Feed infos, updated products, the form and information message.
 
         """
-        return _add_products_to_final_feed(unconfigured_product_list, _self.shop_name)
+        # print(_self.shop_name)
+        return _add_products_to_final_feed(unconfigured_product_list)
 
     def save_to_database(
         _self,
@@ -34,8 +38,12 @@ class FinalFeed_:
             feed_from_current_shop_for_filtering,
         )
 
-    def remove_from_database(_self, customCalcUnitIndexToRemove, feed_conf_from_current_shop_for_updating) -> dict:
-        return _remove_custom_calc_unit_from_database(customCalcUnitIndexToRemove, feed_conf_from_current_shop_for_updating)
-    
+    def remove_from_database(
+        _self, customCalcUnitIndexToRemove, feed_conf_from_current_shop_for_updating
+    ) -> dict:
+        return _remove_custom_calc_unit_from_database(
+            customCalcUnitIndexToRemove, feed_conf_from_current_shop_for_updating
+        )
+
     def sync_from_database(_self, request) -> dict:
         return _sync_feed_conf_from_database(request, _self.shop_name)

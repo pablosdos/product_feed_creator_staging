@@ -1,10 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import (
-    Feed,
-    FeedConfiguration,
-    Product
-)
+from .models import Feed, FeedConfiguration, Product
 
 
 class FeedForm(forms.ModelForm):
@@ -32,6 +28,15 @@ class FeedAdmin(admin.ModelAdmin):
     )
     form = FeedForm
 
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "brand",
+        "is_selected",
+    )
+
+
 admin.site.register(Feed, FeedAdmin)
 admin.site.register(FeedConfiguration)
-admin.site.register(Product)
+admin.site.register(Product, ProductAdmin)
