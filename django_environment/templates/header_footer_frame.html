@@ -207,11 +207,30 @@
                                                 <!--end::Text-->
                                                 <!--begin::Action-->
                                                 <div class="text-center mt-5 mb-9">
-                                                    <a href="#"
-                                                       class="btn btn-sm btn-primary px-6"
-                                                       data-bs-toggle="modal"
-                                                       data-bs-target="#kt_modal_upgrade_plan">Refresh Products</a>
+
+
+
+
+                                                    <a href="javascript:{}"
+                                                       onclick="document.getElementById('generate_refresh_submit_form').submit();"
+                                                       class="btn btn-sm btn-primary px-6">Refresh Products
+                                                    </a>
+
                                                 </div>
+
+                                                <form id="generate_refresh_submit_form"
+                                                      action=""
+                                                      method="post"
+                                                      style="display: none;">
+                                                    {% csrf_token %}
+                                                    <input type="text"
+                                                           id="generate_refresh_submit"
+                                                           name="generate_refresh_submit"
+                                                           value="">
+                                                </form>
+
+
+
                                                 <!--end::Action-->
                                             </div>
                                             <!--end::Section-->
@@ -246,7 +265,6 @@
                                                 <!--begin::Action-->
 
                                                 <div class="row">
-
 
                                                     <div class="text-center mt-5 mb-9 col-6">
 
@@ -562,10 +580,10 @@
                                                                                 name="feed_source_selector">
                                                                             <option value=""></option>
                                                                             <option value="All">All</option>
-                                                                            <option value="Serverkast">Serverkast
-                                                                            </option>
-                                                                            <option value="TopSystems">Top Systems
-                                                                            </option>
+                                                                            {% for feed in feeds %}
+                                                                            <option value="{{feed}}">{{feed}}
+
+                                                                                {% endfor %}
                                                                         </select>
                                                                         <!--end::Select-->
                                                                     </div>
@@ -607,6 +625,53 @@
                 <!--end::Header tablet and mobile-->
                 {% endif %}
 
+                {% if request.resolver_match.url_name == 'product_selection_page' %}
+                <div class="content d-flex flex-column flex-column-fluid"
+                     id="kt_content">
+                    <!--begin::Container-->
+                    <div class=""
+                         id="kt_content_container">
+                        <!--begin::Row-->
+                        <div class="row g-5 g-xl-8">
+                            <!--begin::Col-->
+
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-xl-8 ps-xl-12"
+                                 style="width: 90%;">
+                                <!--begin::Engage widget 1-->
+                                <div class="card bgi-position-y-bottom bgi-position-x-end bgi-no-repeat bgi-size-cover bg-primary mb-5 mb-xl-8 border-0"
+                                     style="background-position: 100% 50px;background-size: 500px auto;background-image:url('assets/media/misc/city.png')"
+                                     dir="ltr">
+                                    <!--begin::Body-->
+                                    <div class="card-body pt-10 pb-8">
+                                        <!--begin::Title-->
+                                        <div class="d-flex align-items-center">
+                                            <h1 class="fw-semibold me-3 text-white">Product Collection</h1>
+                                            <span class="fw-semibold text-white opacity-50">Feed Fusion System</span>
+                                        </div>
+                                        <!--end::Title-->
+
+                                    </div>
+                                    <!--end::Body-->
+                                </div>
+                                <!--end::Engage widget 1-->
+
+
+                                <!--begin::Row-->
+                                <div class="row g-5 g-xl-8">
+
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Container-->
+                </div>
+                <!--end::Header tablet and mobile-->
+                {% endif %}
 
                 <div class="container-xxl"
                      id="kt_content_container">
@@ -675,7 +740,8 @@
                                                   action=""
                                                   method="post">
                                                 {% csrf_token %}
-                                                <input name="add-to-product-collection-form" style="display: none;" />
+                                                <input name="add-to-product-collection-form"
+                                                       style="display: none;" />
                                                 {% for field in form %}
                                                 {% tag_get_product_data field.name as product_data %}
                                                 <tr>

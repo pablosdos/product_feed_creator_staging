@@ -7,6 +7,7 @@ class FeedForm(forms.ModelForm):
     MY_CHOICES = (
         ("XML-URL", ".xml-URL"),
         ("CSV-URL", ".csv-URL"),
+        ("SOMETHING-ELSE", "something-else"),
     )
 
     input_type = forms.ChoiceField(choices=MY_CHOICES)

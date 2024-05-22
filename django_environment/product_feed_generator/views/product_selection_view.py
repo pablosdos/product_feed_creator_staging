@@ -8,22 +8,29 @@ from product_feed_generator.forms import (
     ProductSelectForFinalFeedForm,
     SortingSelectForm,
 )
+from product_feed_generator.modules.final_feed_.base import FinalFeed_
 
 
 @login_required
 def product_selection_view(request):
 
+    if "add-to-product-collection-form" in request.POST:
+        finalfeed = FinalFeed_()
+        # # topsystems_finalfeed._apply_configuration_scheme(complete_topsystems_products_list)
+        context = finalfeed.save_xml_file(request)
+
     template = get_template("product_selection_page.html")
-    if request.method == "GET":
-        selected_products_from_database: QuerySet[Product] = Product.objects.filter(
-            is_selected=True
-        )
-        paginator = Paginator(selected_products_from_database, 50)
-        page_number = request.GET.get("page")
-        paginator_control_with_products_queryset = paginator.get_page(page_number)
-        paginated_form = ProductSelectForFinalFeedForm(
-            paginator_control_with_products_queryset
-        )
+    # if request.method == "GET":
+    selected_products_from_database: QuerySet[Product] = Product.objects.filter(
+        is_selected=True
+    )
+    paginator = Paginator(selected_products_from_database, 50)
+    page_number = request.GET.get("page")
+    paginator_control_with_products_queryset = paginator.get_page(page_number)
+    paginated_form = ProductSelectForFinalFeedForm(
+        paginator_control_with_products_queryset
+    )
+
     feeds = Feed.objects.all()
     if not "sort_type" in locals():
         sort_type: str = "Sort by"

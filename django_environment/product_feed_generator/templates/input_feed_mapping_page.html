@@ -172,11 +172,11 @@
                          class="list-group col"
                          ondrop="addToFinalFeedSchema(this)">
 
-
-                        {% if ProductField in current_product_schema_for_final_feed %}
-                        <div id='{{ProductField}}-init-field'
+                        {% for key, value in current_product_schema_for_final_feed.items %}
+                        {% if key == ProductField %}
+                        <div id='{{value}}-init-field'
                              class="list-group-item"><i
-                               class="bi bi-arrows-move handle float-start"></i>{{ProductField}}
+                               class="bi bi-arrows-move handle float-start"></i>{{value}}
                             <button class="btn btn-danger btn-sm rounded-0 float-end trash-button"
                                     onclick="removeThisElementFromFinalFeedSchema(this)"
                                     type="button"
@@ -186,7 +186,7 @@
                         </div>
 
                         {% endif %}
-
+                        {% endfor %}
 
 
 
@@ -303,7 +303,7 @@
             // final_feed_schema.push(fieldsForFinalFeedSchema[i].id);
             let htmlIdName = 'productFieldDragDropArea_' + ProductFields[i];
             let fieldsForFinalFeedSchema = document.querySelectorAll('#' + htmlIdName + " .list-group-item");
-            // console.log(fieldsForFinalFeedSchema)
+            console.log(fieldsForFinalFeedSchema)
             if (fieldsForFinalFeedSchema === undefined || fieldsForFinalFeedSchema.length == 0) {
 
             } else {
@@ -476,6 +476,6 @@
         animation: 150,
         sort: false
     });
-
+    console.log('JAVASCRIPT EXECUTED SUCCESSFULLY.')
 </script>
 {% endblock %}

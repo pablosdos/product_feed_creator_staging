@@ -12,6 +12,7 @@ from product_feed_generator.models import (
     FeedConfiguration,
     Product
 )
+from product_feed_generator.views.helper import *
 from product_feed_generator.modules.final_feed_.base import FinalFeed_
 # from product_feed_generator.modules.final_feed_.base import FinalFeed_
 from product_feed_generator.forms import ProductSelectForFinalFeedForm, SortingSelectForm
@@ -41,7 +42,7 @@ def master_list_view(request):
     Auto
     Refresh
     """
-    # print(request.POST)
+    print(request.POST)
     if "toggle_auto_refresh_submit" in request.POST:
         pass
         # Feed.objects.filter(shop_name=shop_name).update(
@@ -117,9 +118,15 @@ def master_list_view(request):
             paginator_control_with_products_queryset
         )
 
-    # elif "generate_refresh_submit" in request.POST:
-    #     context = extract_and_save_products(request, shop_name)
-    #     return HttpResponse(template.render(context, request))
+    elif "generate_refresh_submit" in request.POST:
+        paginator = Paginator(Product.objects.all(), 50)
+        page_number = request.GET.get("page")
+        paginator_control_with_products_queryset = paginator.get_page(page_number)
+        paginated_form = ProductSelectForFinalFeedForm(
+            paginator_control_with_products_queryset
+        )
+        context = extract_and_save_products(paginator_control_with_products_queryset)
+        # return HttpResponse(template.render(context, request))
 
     # elif "generate_refresh_submit_with_password" in request.POST:
     #     current_products = IngramMicroProduct.objects.all()

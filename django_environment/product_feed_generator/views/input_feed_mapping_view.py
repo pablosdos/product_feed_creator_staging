@@ -27,6 +27,7 @@ def input_feed_mapping_view(request, shop_name):
     context
     """
     request_post_body = request.POST
+    # print(request_post_body)
     context = {}
     feeds = Feed.objects.all()
     feed_from_current_shop_for_filtering = Feed.objects.get(shop_name=shop_name)
@@ -40,39 +41,44 @@ def input_feed_mapping_view(request, shop_name):
     except:
         feed_conf_from_current_shop = FeedConfiguration.objects.create(
             feed=feed_from_current_shop_for_filtering,
-            product_schema_for_final_feed='{"name":"","main_image":"","shipping_weight":""}',
+            product_schema_for_final_feed='{"name":"short_desc"}',
             custom_calculation_units_list='[{"custom_calc_field_name":"retail_price_excluding_tax","calculation_elements":["sales_price_excluding_tax","/","custom_value_121","*","custom_value_100"]},{"custom_calc_field_name":"cost_price","calculation_elements":["sales_price_excluding_tax","*","custom_value_0.65"]}]',
         )
         feed_conf_from_current_shop_for_updating = FeedConfiguration.objects.filter(
             feed=feed_from_current_shop_for_filtering
         )
-    current_product_schema_for_final_feed = FeedConfiguration.objects.get(
+    current_product_schema_for_final_feed: str = FeedConfiguration.objects.get(
         feed=feed_from_current_shop_for_filtering
     ).product_schema_for_final_feed
-    allFieldsOfProduct = json.loads(
-        feed_from_current_shop_for_filtering.available_fields
+    current_product_schema_for_final_feed: dict = json.loads(
+        current_product_schema_for_final_feed
     )
+    # allFieldsOfProduct = json.loads(
+    #     feed_from_current_shop_for_filtering.available_fields
+    # )
     # if shop_name == "Serverkast":
     #     allFieldsOfProduct = Serverkast_Product._meta.fields[:]
     # elif shop_name == "TopSystems":
     #     allFieldsOfProduct = TopSystemsProduct._meta.fields[:]
     # elif shop_name == "IngramMicro":
     #     allFieldsOfProduct = IngramMicroProduct._meta.fields[:]
-    availableFieldsList = []
-    for field in allFieldsOfProduct:
-        availableFieldsList.append(field)
-    availableFieldsList.pop(0)
+    # availableFieldsList = []
+    # for field in allFieldsOfProduct:
+    #     availableFieldsList.append(field)
+    # availableFieldsList.pop(0)
+    availableFieldsList: list = json.loads(
+        feed_from_current_shop_for_filtering.available_fields
+    )
     # print(availableFieldsList)
     if current_product_schema_for_final_feed == []:
         finalFeedSchemaFieldsList = []
     else:
-        finalFeedSchemaFieldsList = json.loads(
-            current_product_schema_for_final_feed
-        ).keys()
+        finalFeedSchemaFieldsList = current_product_schema_for_final_feed
+
     custom_calculation_units_list = json.loads(
         feed_conf_from_current_shop.custom_calculation_units_list
     )
-    print(current_product_schema_for_final_feed)
+    print(type(current_product_schema_for_final_feed))
     # print(json.mark_safe(feed_conf_from_current_shop.custom_calculation_units_list))
     context.update({"CustomCalcUnits": custom_calculation_units_list}),
     context.update(
@@ -99,21 +105,12 @@ def input_feed_mapping_view(request, shop_name):
     }
     credentials_form = SftpXmlCredentialsForm(initial)
     context.update({"credentials_form": credentials_form}),
-    product_fields: list[str] = [
-        "sku",
-        "name",
-        "short_desc",
-        "long_description",
-        "shipping_weight",
-        "main_image",
-        "extra_image_1",
-        "sales_price_excluding_tax",
-        "brand",
-        "ean",
-        "current_stock",
-        "url_more_info",
-        "shipmentby",
-    ]
+
+    product_fields: list = [f.name for f in Product._meta.get_fields()]
+    product_fields.pop(0)
+    product_fields.pop(0)
+    product_fields.pop(0)
+
     context.update({"product_fields": product_fields}),
     # adding custom calc field
     # if "add_custom_calc_field" in request.POST:
@@ -155,9 +152,22 @@ def input_feed_mapping_view(request, shop_name):
                 "finalFeedCustomCalcUnits", "[]"
             )
         )
-        finalfeed = FinalFeed_(shop_name)
+        custom_calculation_units_list = json.loads(
+            feed_conf_from_current_shop.custom_calculation_units_list
+        )
+        # print(type(current_product_schema_for_final_feed))
+        # print(json.mark_safe(feed_conf_from_current_shop.custom_calculation_units_list))
+        context.update({"CustomCalcUnits": custom_calculation_units_list}),
+        context.update(
+            {
+                "CustomCalcUnitsJson": mark_safe(
+                    feed_conf_from_current_shop.custom_calculation_units_list
+                )
+            }
+        ),
+        # finalfeed = FinalFeed_(shop_name)
         # context = finalfeed.sync_from_database(request)
-        del finalfeed
+        # del finalfeed
         context.update({"update_message": "Schema updated!"}),
     # print(context)
     return HttpResponse(template.render(context, request))

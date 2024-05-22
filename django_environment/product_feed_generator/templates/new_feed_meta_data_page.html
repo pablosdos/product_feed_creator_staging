@@ -174,7 +174,7 @@
           action=""
           method="post">
         {% csrf_token %}
-        <h1 style="margin-bottom: 30px;">Setup Feed Assistant</h1>
+        <h1 style="margin-bottom: 30px;">Feed Setup Assistant</h1>
         <!-- One "tab" for each step in the form: -->
         <div class="tab">
 
@@ -182,7 +182,7 @@
             <div class="tab"> Feed Name (No Space!)
                 <p> {{ form.shop_name }}</p>
             </div>
-            <div class="tab"> Input URL
+            <div class="tab"> Input URL – Press Enter To Detect the Source
                 <p> {{ form.input_url }}</p>
             </div>
             <div class="tab"> Input Type
@@ -199,7 +199,7 @@
 
             </div>
         </div>
-        <div style="height: 60px;">
+        <div style="height: 180px;">
             <div class="tags-input">
                 <ul id="tags"></ul>
             </div>
@@ -214,22 +214,24 @@
                     {% endfor %}
                     <br>
                     {% for error in form.input_type.errors %}
-                    Input Type: {{ error }}
+                    Input Type: {{ error }}<br>
                     {% endfor %}
                     <br>
                     {% for error in form.available_fields.errors %}
                     Feed Fields: {{ error }}
                     {% endfor %}
                     <br>
-
+                    {% if input_url_alert %}
+                    {{ input_url_alert }}
+                    {% endif %}
                 </div>
                 <div class="col-4">
 
                     <div style="float:right;">
-                        <button type="button"
-                                class="control-button"
-                                id="prevBtn"
-                                onclick="nextPrev(-1)">Cancel</button>
+                        <a href="{% url 'master_list_page' %}">
+                            <button type="button"
+                                    class="control-button"
+                                    id="prevBtn">Cancel</button></a>
                         <button type="submit"
                                 class="control-button"
                                 id="nextBtn"
@@ -243,44 +245,114 @@
 
     </form>
 
+    <form id="inputUrlPhantomForm"
+          name="inputUrlPhantomForm"
+          action=""
+          method="post"
+          style="display: none;">
+        {% csrf_token %}
+        <input type="text"
+               id="inputURLInputFieldPhantomForSending"
+               name="inputURLInputFieldPhantomForSending"
+               value="">
+        <input type="text"
+               id="shopNameInputFieldPhantomForSending"
+               name="shopNameInputFieldPhantomForSending"
+               value="">
+    </form>
 
-    <script>
+    <script type="text/javascript">
+        const inputFieldsJsArrayFromView = {{ input_fields_js_array }};
+        // console.log(inputFieldsJsArrayFromView)
         const tags = document.getElementById('tags');
         const input = document.getElementById('input-tag');
+        // is being added to the tag in form class FeedForm
+        const urlInput = document.getElementById('inputURLInputField');
+        const shopNameInput = document.getElementById('id_shop_name');
+        const urlInputSendingPhantom = document.getElementById('inputURLInputFieldPhantomForSending');
+        const shopNameSendingPhantom = document.getElementById('shopNameInputFieldPhantomForSending');
         const input_available_fields = document.getElementById('id_available_fields');
         const tags_input_field = document.getElementsByClassName('tags-input')[0];
         tags_input_field.style.display = 'none';
         input_available_fields.value = '';
 
-        input.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                tags_input_field.style.display = 'block';
-                event.preventDefault();
-                const tag = document.createElement('li');
-                const tagContent = input.value.trim();
-                let isNewTagValue = true;
-                if (tagContent !== '') {
-                    const liElements = document.getElementsByTagName("li");
-                    Array.prototype.forEach.call(liElements, function (el) {
-                        if (el.innerHTML.split('<')[0] == tagContent) {
-                            isNewTagValue = false;
-                        }
-                    });
-                    if (isNewTagValue) {
-                        tag.innerText = tagContent;
-                        tag.innerHTML += '<button class="delete-button">X</button>';
-                        tags.appendChild(tag);
-                        if (input_available_fields.value == '') {
-                            input_available_fields.value = '"' + tagContent + '"';
-                        } else {
-                            input_available_fields.value = input_available_fields.value + ', "' + tagContent + '"';
-                        }
+        function addTag(tagText) {
+            tags_input_field.style.display = 'block';
+            const tag = document.createElement('li');
+            const tagContent = tagText;
+            let isNewTagValue = true;
+            if (tagContent !== '') {
+                const liElements = document.getElementsByTagName("li");
+                Array.prototype.forEach.call(liElements, function (el) {
+                    if (el.innerHTML.split('<')[0] == tagContent) {
+                        isNewTagValue = false;
                     }
-                    input.value = '';
+                });
+                if (isNewTagValue) {
+                    tag.innerText = tagContent;
+                    tag.innerHTML += '<button class="delete-button">X</button>';
+                    tags.appendChild(tag);
+                    if (input_available_fields.value == '') {
+                        input_available_fields.value = '"' + tagContent + '"';
+                    } else {
+                        input_available_fields.value = input_available_fields.value + ', "' + tagContent + '"';
+                    }
                 }
+                input.value = '';
+            }
+        }
+
+
+        // check if tag elements set in 1 step before; if yes, add them
+        if (inputFieldsJsArrayFromView instanceof Array && inputFieldsJsArrayFromView.length > 0) {
+            for (let i = 0; i < inputFieldsJsArrayFromView.length; i++) {
+                addTag(inputFieldsJsArrayFromView[i]);
+            }
+        }
+
+        // suppress shop_name enter event
+        shopNameInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
             }
         });
 
+        // Input URL check
+        urlInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                urlInputSendingPhantom.value = urlInput.value
+                shopNameSendingPhantom.value = shopNameInput.value
+                document.getElementById('inputUrlPhantomForm').submit();
+
+                // event.preventDefault();
+                // var xhr = new XMLHttpRequest();
+                // xhr.open("POST", window.location.href, true);
+                // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                // xhr.onreadystatechange = function () {
+                //     if (this.readyState) {
+                //         // var json = JSON.parse(this.responseText);
+                //         console.log(this);
+                //         console.log(this.response);
+                //         //following line would actually change the url of your window.  
+                //         window.location.href = json.success;
+                //     }
+                // };
+                // xhr.send(
+                //     'urlReceived=' + urlInput.value,
+                // );
+            }
+        });
+
+        // add tag
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addTag(input.value.trim());
+            }
+        });
+
+        // remove tag
         tags.addEventListener('click', function (event) {
             if (event.target.classList.contains('delete-button')) {
                 event.target.parentNode.remove();
@@ -293,7 +365,8 @@
                     tags_input_field.style.display = 'none';
                 }
             }
-        }); 
+        });
+        console.log('JAVASCRIPT EXECUTED SUCCESSFULLY.')
     </script>
 </body>
 
