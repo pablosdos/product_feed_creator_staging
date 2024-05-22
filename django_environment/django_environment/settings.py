@@ -72,6 +72,7 @@ WSGI_APPLICATION = "django_environment.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DEVELOPMENT
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -79,6 +80,7 @@ DATABASES = {
     }
 }
 
+# STAGING
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -128,13 +130,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 # DEVELOPMENT
-STATIC_ROOT = '/Users/paulkluge/Documents/Work/Codebase/Offgridcentrum/product_feed_creator/django_environment/static'
-LOCATION_OF_FINAL_FEED_FILE = "product_feed_generator/static/final-feed-file.xml"
-DEBUG = True
-# PRODUCTION
-# STATIC_ROOT = '/home/datafeeds/staging/django_environment/static'
-# LOCATION_OF_FINAL_FEED_FILE = "static/final-feed-file.xml"
+# STATIC_ROOT = '/Users/paulkluge/Documents/Work/Codebase/Offgridcentrum/product_feed_creator/django_environment/static'
+# LOCATION_OF_FINAL_FEED_FILE = "product_feed_generator/static/final-feed-file.xml"
 # DEBUG = True
+# STAGING
+STATIC_ROOT = '/home/datafeeds/staging/django_environment/static'
+LOCATION_OF_FINAL_FEED_FILE = "static/final-feed-file.xml"
+DEBUG = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

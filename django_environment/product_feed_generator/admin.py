@@ -39,5 +39,5 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Feed, FeedAdmin)
-admin.site.register(FeedConfiguration)
+# admin.site.register(FeedConfiguration)
 admin.site.register(Product, ProductAdmin)
