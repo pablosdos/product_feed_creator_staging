@@ -18,7 +18,7 @@ from product_feed_generator.modules import FeedUrl_
 def new_feed_meta_data_view(request):
     context: dict = {}
     request_post = request.POST
-    print(request_post)
+    # print(request_post)
     if "inputURLInputFieldPhantomForSending" in request_post:
         input_url: str = request_post.get("inputURLInputFieldPhantomForSending")
         feed_format: str = FeedUrl_.getFeedFormat(input_url)
@@ -39,12 +39,14 @@ def new_feed_meta_data_view(request):
 
     if "nextBtn" in request_post:
         form = FeedForm(request.POST or None, request.FILES or None)
+        # SFTP-URL
         if form.is_valid():
             form_ = form.save(commit=False)
             shop_name: str = form.cleaned_data["shop_name"]
             form_.available_fields = "[" + form.cleaned_data["available_fields"] + "]"
             form_.products_update_cronjob_active = False
             form_.auto_add_new_products_cronjob_active = False
+            form_.is_new_feed = True
             form_.products_last_updated = date.today()
             form.save()
             return redirect("input_feed_mapping_page", shop_name=shop_name)

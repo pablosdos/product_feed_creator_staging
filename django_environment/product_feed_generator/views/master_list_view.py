@@ -42,7 +42,7 @@ def master_list_view(request):
     Auto
     Refresh
     """
-    print(request.POST)
+    # print(request.POST)
     if "toggle_auto_refresh_submit" in request.POST:
         pass
         # Feed.objects.filter(shop_name=shop_name).update(

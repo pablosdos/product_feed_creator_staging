@@ -9,6 +9,7 @@ class FeedForm(ModelForm):
         ("SELECT", "SELECT"),
         ("XML-URL", ".xml web page"),
         ("CSV-URL", ".csv download file"),
+        ("SFTP-URL", ".txt server file"),
     )
     products_update_cronjob_active = forms.BooleanField(
         widget=forms.HiddenInput(), required=False
@@ -25,6 +26,8 @@ class FeedForm(ModelForm):
         self.fields["input_url"].widget = forms.TextInput(
             attrs={"id": "inputURLInputField"}
         )
+        self.fields["input_type"].widget.attrs['disabled'] = 'disabled'
+        self.fields['available_fields'].widget.attrs['readonly'] = 'readonly'
 
     class Meta:
         model = Feed
@@ -47,11 +50,11 @@ class FeedForm(ModelForm):
         return shop_name
 
     def clean(self):
-        if not "input_type" in self.cleaned_data:
-            self.add_error(
-                "input_type",
-                "Please select an input file format",
-            )
+        # if not "input_type" in self.cleaned_data:
+        #     self.add_error(
+        #         "input_type",
+        #         "Please select an input file format",
+        #     )
         # if (
         #     self.cleaned_data['input_type'] == 'SELECT'
         # ):

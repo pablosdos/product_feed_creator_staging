@@ -9,6 +9,9 @@ from product_feed_generator.modules.final_feed_.output.database import (
 
 
 class FinalFeed_:
+    """
+    This class handles everything in terms of the Final Feed
+    """
     # def __init__(_self):
     # self._shop_name = name
     # _self.shop_name = shop_name

@@ -1,7 +1,8 @@
-{% extends "base.html" %}
+
 {% load i18n static customfilters %}
 
 {% block head %}
+<title>New Feed</title>
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css?family=Raleway"
@@ -179,27 +180,30 @@
         <div class="tab">
 
 
-            <div class="tab"> Feed Name (No Space!)
+            <div class="tab"> Feed Name
                 <p> {{ form.shop_name }}</p>
             </div>
-            <div class="tab"> Input URL – Press Enter To Detect the Source
+            <div class="tab"> Input URL – Copy/Paste to here and PRESS ENTER
                 <p> {{ form.input_url }}</p>
             </div>
             <div class="tab"> Input Type
                 <p> {{ form.input_type }}</p>
             </div>
             {{ form.available_fields }}
-            <div class="tab"> Which Fields You Want To Use? – Press Enter To Submit Tag
+            <div class="tab"> Which Fields You Want To Use?
                 <p>
 
                     <input type="text"
                            id="input-tag"
-                           placeholder="Enter Field Name" />
+                           readonly="readonly"
+                           placeholder="Enter Field Name"
+                           style="display: none;" />
                 </p>
 
             </div>
         </div>
-        <div style="height: 180px;">
+        <div id="tags-box"
+        style="height: 80px;">
             <div class="tags-input">
                 <ul id="tags"></ul>
             </div>
@@ -211,6 +215,10 @@
                 <div class="col-8">
                     {% for error in form.shop_name.errors %}
                     {{ error }}
+                    {% endfor %}
+                    <br>
+                    {% for error in form.input_url.errors %}
+                    Input URL: {{ error }}<br>
                     {% endfor %}
                     <br>
                     {% for error in form.input_type.errors %}
@@ -266,6 +274,8 @@
         // console.log(inputFieldsJsArrayFromView)
         const tags = document.getElementById('tags');
         const input = document.getElementById('input-tag');
+        const inputTypeInput = document.getElementById('id_input_type');
+        const submitFinalFormButton = document.getElementById('nextBtn');
         // is being added to the tag in form class FeedForm
         const urlInput = document.getElementById('inputURLInputField');
         const shopNameInput = document.getElementById('id_shop_name');
@@ -273,8 +283,20 @@
         const shopNameSendingPhantom = document.getElementById('shopNameInputFieldPhantomForSending');
         const input_available_fields = document.getElementById('id_available_fields');
         const tags_input_field = document.getElementsByClassName('tags-input')[0];
+        const tags_box = document.getElementById('tags-box');
         tags_input_field.style.display = 'none';
         input_available_fields.value = '';
+        // console.log(inputTypeInput)
+        // console.log(submitFinalFormButton)
+        // console.log(submitFinalFormButton)
+
+        // Enable Input Type Field for sending it with the form (is disabled by Django)
+        submitFinalFormButton.addEventListener('click', function (event) {
+            // event.preventDefault()
+            inputTypeInput.disabled = false;
+            // console.log(inputTypeInput.disabled)
+
+        });
 
         function addTag(tagText) {
             tags_input_field.style.display = 'block';
@@ -300,6 +322,7 @@
                 }
                 input.value = '';
             }
+            tags_box.setAttribute("style","min-height:"+tags_input_field.offsetHeight+"px");
         }
 
 

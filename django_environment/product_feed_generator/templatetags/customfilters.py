@@ -27,7 +27,7 @@ def getFeedProductCount(shop_name):
 @register.simple_tag
 def tag_get_product_data(id_with_feed_source):
     django_product_id = id_with_feed_source.split(" ––– ")[0]
-    source_feed = id_with_feed_source.split(" ––– ")[1]
+    # source_feed = id_with_feed_source.split(" ––– ")[1]
     django_product_object = Product.objects.get(id=django_product_id)
     # if source_feed == "Serverkast":
     #     django_product_object = Serverkast_Product.objects.get(id=django_product_id)

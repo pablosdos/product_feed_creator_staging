@@ -36,6 +36,7 @@ def from_ingrammicro_feed(request, shop_name):
     hostname = str(parsed_url.hostname)
     username = str(parsed_url.username)
     password = str(parsed_url.password)
+    # connect to server (with SSH), download file and extract products
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(

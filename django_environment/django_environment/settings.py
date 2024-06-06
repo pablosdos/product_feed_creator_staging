@@ -23,7 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-1q0$#d$hz4hwq_z(dk&fgy#v-zo(_*j1kn^fg(s^u4ax!d2our"
 
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', 'feedcreator.paul-kluge.de', 'feedfusion.nl', 'www.feedfusion.nl', 'staging.feedfusion.nl']
+ALLOWED_HOSTS = [
+    "localhost",
+    "0.0.0.0",
+    "feedcreator.paul-kluge.de",
+    "feedfusion.nl",
+    "www.feedfusion.nl",
+    "staging.feedfusion.nl",
+]
 
 
 # Application definition
@@ -53,7 +60,9 @@ ROOT_URLCONF = "django_environment.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [(os.path.join(BASE_DIR, 'templates')),],
+        "DIRS": [
+            (os.path.join(BASE_DIR, "templates")),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -130,7 +139,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 # DEVELOPMENT
-STATIC_ROOT = '/Users/paulkluge/Documents/Work/Codebase/Offgridcentrum/product_feed_creator/django_environment/static'
+STATIC_ROOT = "/Users/paulkluge/Documents/Work/Codebase/Offgridcentrum/product_feed_creator/django_environment/static"
 LOCATION_OF_FINAL_FEED_FILE = "product_feed_generator/static/final-feed-file.xml"
 DEBUG = True
 # STAGING
@@ -143,4 +152,13 @@ DEBUG = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = "/admin/login/"
+
+REQUEST_HEADER = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+    "Accept-Encoding": "none",
+    "Accept-Language": "en-US,en;q=0.8",
+    "Connection": "keep-alive",
+}

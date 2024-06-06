@@ -14,6 +14,8 @@ class FeedForm(forms.ModelForm):
 
 
 class FeedAdmin(admin.ModelAdmin):
+    readonly_fields = ("input_type",)
+
     fields = (
         "shop_name",
         "input_url",
@@ -22,6 +24,7 @@ class FeedAdmin(admin.ModelAdmin):
         "products_last_updated",
         "products_update_cronjob_active",
         "auto_add_new_products_cronjob_active",
+        "is_new_feed",
     )
     list_display = (
         "shop_name",
@@ -32,12 +35,14 @@ class FeedAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        "name",
-        "brand",
+        "id",
+        # "name",
+        # "brand",
+        "feed",
         "is_selected",
     )
 
 
 admin.site.register(Feed, FeedAdmin)
-# admin.site.register(FeedConfiguration)
+admin.site.register(FeedConfiguration)
 admin.site.register(Product, ProductAdmin)
