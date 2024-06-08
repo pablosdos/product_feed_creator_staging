@@ -9,6 +9,9 @@ from product_feed_generator.forms import (
     SortingSelectForm,
 )
 from product_feed_generator.modules.final_feed_.base import FinalFeed_
+from product_feed_generator.modules.final_feed_.output.xml import (
+    create_final_feed_xml_file,
+)
 
 
 @login_required
@@ -46,4 +49,9 @@ def product_selection_view(request):
         "paginator_control": paginator_control_with_products_queryset,
         # "feed_config_form": feed_config_form,
     }
+
+    # export product list to .xml file
+    if "trigger-export" is not "":
+        create_final_feed_xml_file()
+
     return HttpResponse(template.render(context, request))

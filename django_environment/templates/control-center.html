@@ -1,6 +1,7 @@
 {% load i18n static customfilters %}
 
-{% if request.resolver_match.url_name == 'master_list_page' or request.resolver_match.url_name == 'product_selection_page' %}
+{% with request.resolver_match.url_name as url_ %}
+{% if url_ == 'master_list_page' or url_ == 'product_selection_page' %}
 
 
 
@@ -97,6 +98,27 @@
                     <!--end::Section-->
                 </div>
                 <!--end::Wrapper-->
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-column px-9 border-top">
+                    <!--begin::Section-->
+                    <div class="pt-10 pb-0">
+                        <!--begin::Title-->
+                        <h3 class="text-gray-900 text-center fw-bold">Input Feeds</h3>
+                        <!--end::Title-->
+                        <!--begin::Text-->
+                        <div class="text-center text-gray-600 fw-semibold pt-1">Browse and pick products from all input
+                            feeds</div>
+                        <!--end::Text-->
+                        <!--begin::Action-->
+                        <div class="text-center mt-5 mb-9">
+                            <a href="{% url 'master_list_page' %}"
+                               class="btn btn-sm btn-primary px-6">Main Page</a>
+                        </div>
+                        <!--end::Action-->
+                    </div>
+                    <!--end::Section-->
+                </div>
+                <!--end::Wrapper-->
             </div>
             <!--end::Input_Feed_Tab-->
             <!--begin::Product_List_Tab-->
@@ -166,18 +188,20 @@
                             selected Products and export them to the final .xml file</div>
                         <!--end::Text-->
                         <!--begin::Action-->
-
-
-                        <div class="text-center mt-5 mb-9">
-                            <a href="#"
-                               class="btn btn-sm btn-primary px-6"
-                               data-bs-toggle="modal"
-                               data-bs-target="#kt_modal_upgrade_plan">Export
-                                .xml</a>
-                        </div>
-
-
-
+                        <form id="trigger_export_form"
+                              method="post"
+                              action="#">
+                            <input name="trigger-export"
+                                   style="display: none;" />
+                            <div class="text-center mt-5 mb-9">
+                                <a href="javascript:{}"
+                                   onclick="document.getElementById('trigger_export_form').submit();"
+                                   class="btn btn-sm btn-primary px-6"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#kt_modal_upgrade_plan">Export
+                                    .xml</a>
+                            </div>
+                        </form>
                         <!--end::Action-->
                     </div>
                     <!--end::Section-->
@@ -197,10 +221,8 @@
                         <!--end::Text-->
                         <!--begin::Action-->
                         <div class="text-center mt-5 mb-9">
-                            <a href="#"
-                               class="btn btn-sm btn-primary px-6"
-                               data-bs-toggle="modal"
-                               data-bs-target="#kt_modal_upgrade_plan">View Final Feed</a>
+                            <a href="{% static 'final-feed-file.xml' %}"
+                               class="btn btn-sm btn-primary px-6">View Final Feed</a>
                         </div>
                         <!--end::Action-->
                     </div>
@@ -219,4 +241,4 @@
 </div>
 <!--end::Control_Center-->
 {% endif %}
-
+{% endwith %}

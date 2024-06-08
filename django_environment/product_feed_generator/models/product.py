@@ -13,7 +13,7 @@ class Product(models.Model):
     shipping_weight = models.CharField(max_length=65535)
     main_image = models.CharField(max_length=65535)
     extra_image_1 = models.CharField(max_length=65535)
-    sales_price_excluding_tax = models.CharField(max_length=65535)
+    sales_price_excluding_tax = models.FloatField(max_length=65535, null=True, blank=True)
     brand = models.CharField(max_length=65535)
     ean = models.CharField(max_length=65535)
     current_stock = models.CharField(max_length=65535)

@@ -54,6 +54,7 @@ def _import_list_file(product_data: list, feed: Feed, feed_conf: FeedConfigurati
     product_schema: dict = json.loads(feed_conf.product_schema_for_final_feed)
     product_list_for_storing: list = []
     for product in product_data:
+        sales_price_excluding_tax_var: float = None
         # 3) create vars (mapped attribute as value) for keys of Feed Fusion product model in the schema
         for feed_fusion_model_key, mapped_value in product_schema.items():
             # print(product)
@@ -64,9 +65,7 @@ def _import_list_file(product_data: list, feed: Feed, feed_conf: FeedConfigurati
                         f'''{feed_fusion_model_key}: str = """ {product[mapped_value]} """'''
                     )
                 else:
-                    exec(
-                        f'''{feed_fusion_model_key}: str = ""'''
-                    )
+                    exec(f'''{feed_fusion_model_key}: str = ""''')
             else:
                 # product is list
                 exec(
@@ -79,6 +78,14 @@ def _import_list_file(product_data: list, feed: Feed, feed_conf: FeedConfigurati
             except:
                 exec(f"{attribute} = None")
 
+        if locals()["sales_price_excluding_tax"] == "":
+            sales_price_excluding_tax_var = None
+        else:
+            sales_price_excluding_tax_var = float(
+                safe(locals()["sales_price_excluding_tax"], "")
+                .split(" EUR")[0]
+                .strip(' "')
+            )
         product_list_for_storing.append(
             # 5) add attribute if part of the mapping, otherwise empty string
             Product(
@@ -91,9 +98,7 @@ def _import_list_file(product_data: list, feed: Feed, feed_conf: FeedConfigurati
                 shipping_weight=safe(locals()["shipping_weight"], ""),
                 main_image=safe(locals()["main_image"], ""),
                 extra_image_1=safe(locals()["extra_image_1"], ""),
-                sales_price_excluding_tax=safe(
-                    locals()["sales_price_excluding_tax"], ""
-                ),
+                sales_price_excluding_tax=sales_price_excluding_tax_var,
                 brand=safe(locals()["brand"], ""),
                 ean=safe(locals()["ean"], ""),
                 current_stock=safe(locals()["current_stock"], ""),

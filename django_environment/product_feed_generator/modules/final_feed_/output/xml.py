@@ -12,6 +12,18 @@ from product_feed_generator.modules.final_feed_.modify import (
 from product_feed_generator.views.helper import *
 
 
+@staticmethod
+def create_final_feed_xml_file() -> None:
+    selected_products_from_database: QuerySet[Product] = Product.objects.filter(
+        is_selected=True
+    )
+    xml: bytes = dicttoxml(selected_products_from_database.values(), custom_root="product_final_feed", attr_type=False)
+    f = open(settings.LOCATION_OF_FINAL_FEED_FILE, "wb")
+    f.write(xml)
+    f.close()
+    return None
+
+
 def from_serverkast_feed(request, shop_name):
     feed = Feed.objects.get(shop_name=shop_name)
     # form = ServerkastProductSelectForFinalFeedForm(request.POST)

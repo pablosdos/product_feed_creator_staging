@@ -99,34 +99,37 @@
                 </div>
 
                 {% if request.resolver_match.url_name == 'master_list_page' %}
-                <div class="content d-flex flex-column flex-column-fluid"
-                     id="kt_content">
-                    <!--begin::Container-->
-                    <div class=""
-                         id="kt_content_container">
-                        <!--begin::Row-->
-                        <div class="row g-5 g-xl-8">
-                            <!--begin::Col-->
+                <form id="apply_filter_sorting_pagination_form"
+                      method="POST">
+                    <div class="content d-flex flex-column flex-column-fluid"
+                         id="kt_content">
+                        <!--begin::Container-->
+                        <div class=""
+                             id="kt_content_container">
+                            <!--begin::Row-->
+                            <div class="row g-5 g-xl-8">
+                                <!--begin::Col-->
 
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-xl-8 ps-xl-12"
-                                 style="width: 90%;">
-                                <!--begin::Engage widget 1-->
-                                <div class="card bgi-position-y-bottom bgi-position-x-end bgi-no-repeat bgi-size-cover bg-primary mb-5 mb-xl-8 border-0"
-                                     style="background-position: 100% 50px;background-size: 500px auto;background-image:url('assets/media/misc/city.png')"
-                                     dir="ltr">
-                                    <!--begin::Body-->
-                                    <div class="card-body pt-10 pb-8">
-                                        <!--begin::Title-->
-                                        <div class="d-flex align-items-center">
-                                            <h1 class="fw-semibold me-3 text-white">Select Your Products</h1>
-                                            <span class="fw-semibold text-white opacity-50">Feed Fusion System</span>
-                                        </div>
-                                        <!--end::Title-->
-                                        <!--begin::Wrapper-->
-                                        <!--begin::Form-->
-                                        <form method="POST">
+                                <!--end::Col-->
+                                <!--begin::Col-->
+                                <div class="col-xl-8 ps-xl-12"
+                                     style="width: 90%;">
+                                    <!--begin::Engage widget 1-->
+                                    <div class="card bgi-position-y-bottom bgi-position-x-end bgi-no-repeat bgi-size-cover bg-primary mb-5 mb-xl-8 border-0"
+                                         style="background-position: 100% 50px;background-size: 500px auto;background-image:url('assets/media/misc/city.png')"
+                                         dir="ltr">
+                                        <!--begin::Body-->
+                                        <div class="card-body pt-10 pb-8">
+                                            <!--begin::Title-->
+                                            <div class="d-flex align-items-center">
+                                                <h1 class="fw-semibold me-3 text-white">Select Your Products</h1>
+                                                <span class="fw-semibold text-white opacity-50">Feed Fusion
+                                                    System</span>
+                                            </div>
+                                            <!--end::Title-->
+                                            <!--begin::Wrapper-->
+                                            <!--begin::Form-->
+
                                             <!--begin::Card-->
                                             <div class="card mb-7">
                                                 <!--begin::Card body-->
@@ -139,11 +142,7 @@
                                                         <div class="position-relative w-md-400px me-md-2">
                                                             <i
                                                                class="ki-outline ki-magnifier fs-3 text-gray-500 position-absolute top-50 translate-middle ms-6"></i>
-                                                            <input type="text"
-                                                                   class="form-control form-control-solid ps-10"
-                                                                   name="search_bar"
-                                                                   value=""
-                                                                   placeholder="Search" />
+                                                            {{sorting_option_form.search_bar}}
                                                         </div>
                                                         <!--end::Input group-->
                                                         <!--begin:Action-->
@@ -185,19 +184,8 @@
                                                                                class="fs-6 form-label fw-bold text-gray-900">Feed
                                                                             Source (Company)</label>
                                                                         <!--begin::Select-->
-                                                                        <select class="form-select form-select-solid"
-                                                                                data-control="select2"
-                                                                                data-placeholder="All"
-                                                                                data-hide-search="true"
-                                                                                onChange="form.submit();"
-                                                                                name="feed_source_selector">
-                                                                            <option value=""></option>
-                                                                            <option value="All">All</option>
-                                                                            {% for feed in feeds %}
-                                                                            <option value="{{feed}}">{{feed}}
 
-                                                                                {% endfor %}
-                                                                        </select>
+                                                                        {{sorting_option_form.feed_source_selector}}
                                                                         <!--end::Select-->
                                                                     </div>
                                                                     <!--end::Col-->
@@ -214,282 +202,285 @@
                                                 <!--end::Card body-->
                                             </div>
                                             <!--end::Card-->
-                                        </form>
-                                        <!--end::Form-->
-                                        <!--end::Wrapper-->
-                                    </div>
-                                    <!--end::Body-->
-                                </div>
-                                <!--end::Engage widget 1-->
 
-
-                                <!--begin::Row-->
-                                <div class="row g-5 g-xl-8">
-
-                                </div>
-                                <!--end::Row-->
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Row-->
-                    </div>
-                    <!--end::Container-->
-                </div>
-                <!--end::Header tablet and mobile-->
-                {% endif %}
-                {% with request.resolver_match.url_name as url_ %}
-                {% with 'custom_fields_page' as third_page %}
-                {% if url_ == 'product_selection_page' or url_ == 'input_feed_mapping_page' or url_ == third_page %}
-                <div class="content d-flex flex-column flex-column-fluid"
-                     id="kt_content">
-                    <!--begin::Container-->
-                    <div class=""
-                         id="kt_content_container">
-                        <!--begin::Row-->
-                        <div class="row g-5 g-xl-8">
-                            <!--begin::Col-->
-
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-xl-8 ps-xl-12"
-                                 style="width: 90%;">
-                                <!--begin::Engage widget 1-->
-                                <div class="card bgi-position-y-bottom bgi-position-x-end bgi-no-repeat bgi-size-cover bg-primary mb-5 mb-xl-8 border-0"
-                                     style="background-position: 100% 50px;background-size: 500px auto;background-image:url('assets/media/misc/city.png')"
-                                     dir="ltr">
-                                    <!--begin::Body-->
-                                    <div class="card-body pt-10 pb-8">
-                                        <!--begin::Title-->
-                                        <div class="d-flex align-items-center">
-                                            <h1 class="fw-semibold me-3 text-white">
-                                                {% if request.resolver_match.url_name == 'product_selection_page' %}
-                                                Product Collection
-                                                {% endif %}
-                                                {% if request.resolver_match.url_name == 'input_feed_mapping_page' %}
-                                                Data Input, Fields Mapping
-                                                {% endif %}
-                                                {% if request.resolver_match.url_name == third_page %}
-                                                Custom Fields
-                                                {% endif %}
-                                            </h1>
-                                            <span class="fw-semibold text-white opacity-50">Feed Fusion System</span>
+                                            <!--end::Form-->
+                                            <!--end::Wrapper-->
                                         </div>
-                                        <!--end::Title-->
+                                        <!--end::Body-->
+                                    </div>
+                                    <!--end::Engage widget 1-->
+
+
+                                    <!--begin::Row-->
+                                    <div class="row g-5 g-xl-8">
 
                                     </div>
-                                    <!--end::Body-->
+                                    <!--end::Row-->
                                 </div>
-                                <!--end::Engage widget 1-->
-
-
-                                <!--begin::Row-->
-                                <div class="row g-5 g-xl-8">
-
-                                </div>
-                                <!--end::Row-->
+                                <!--end::Col-->
                             </div>
-                            <!--end::Col-->
+                            <!--end::Row-->
                         </div>
-                        <!--end::Row-->
+                        <!--end::Container-->
                     </div>
-                    <!--end::Container-->
-                </div>
-                <!--end::Header tablet and mobile-->
-                {% endif %}
-                {% endwith %}
-                {% endwith %}
 
-                <div class="container-xxl"
-                     id="kt_content_container">
-
-
-                    {% block content %}
-                    {% endblock %}
-
-
-
-
-
-                    {% if request.resolver_match.url_name == 'master_list_page' %}
-                    <!--begin::Sorting Bar-->
-                    <div class="d-flex flex-wrap flex-stack pb-7">
-                        <!--begin::Title-->
-                        <div class="d-flex flex-wrap align-items-center my-1">
-                            <h3 class="fw-bold me-5 my-1">{{found_products_count}} Items Found
-                                {% if sort_type != "Sort by" %}
-
-                                <span class="text-gray-500 fs-6">by {{sort_type}}</span>
-                                {% endif %}
-                            </h3>
-                        </div>
-                        <!--end::Title-->
-                        <!--begin::Controls-->
-                        <div class="d-flex flex-wrap my-1">
-
-                            <!--begin::Actions-->
-                            <div class="d-flex my-0">
-                                <!--begin::Select-->
-                                <form method="POST">
-                                    {{sorting_option_form.sorting_options}}
-                                </form>
-                                <!--end::Select-->
-
-                            </div>
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Controls-->
-                    </div>
-                    <!--end::Sorting Bar-->
+                    <!--end::Header tablet and mobile-->
                     {% endif %}
-
                     {% with request.resolver_match.url_name as url_ %}
-                    {% if url_ == 'master_list_page' or url_ == 'product_selection_page' %}
-                    <!--begin::Product_List-->
-                    <div class="col-xl-12">
-                        <!--begin::Table widget 14-->
-                        <div class="card card-flush h-md-100">
-                            <!--begin::Header-->
+                    {% with 'custom_fields_page' as third_page %}
+                    {% if url_ == 'product_selection_page' or url_ == 'input_feed_mapping_page' or url_ == third_page %}
+                    <div class="content d-flex flex-column flex-column-fluid"
+                         id="kt_content">
+                        <!--begin::Container-->
+                        <div class=""
+                             id="kt_content_container">
+                            <!--begin::Row-->
+                            <div class="row g-5 g-xl-8">
+                                <!--begin::Col-->
 
-                            <!--end::Header-->
-                            <!--begin::Body-->
+                                <!--end::Col-->
+                                <!--begin::Col-->
+                                <div class="col-xl-8 ps-xl-12"
+                                     style="width: 90%;">
+                                    <!--begin::Engage widget 1-->
+                                    <div class="card bgi-position-y-bottom bgi-position-x-end bgi-no-repeat bgi-size-cover bg-primary mb-5 mb-xl-8 border-0"
+                                         style="background-position: 100% 50px;background-size: 500px auto;background-image:url('assets/media/misc/city.png')"
+                                         dir="ltr">
+                                        <!--begin::Body-->
+                                        <div class="card-body pt-10 pb-8">
+                                            <!--begin::Title-->
+                                            <div class="d-flex align-items-center">
+                                                <h1 class="fw-semibold me-3 text-white">
+                                                    {% if url_ == 'product_selection_page' %}
+                                                    Product Collection
+                                                    {% endif %}
+                                                    {% if url_ == 'input_feed_mapping_page'%}
+                                                    Data Input, Fields Mapping
+                                                    {% endif %}
+                                                    {% if url_ == third_page %}
+                                                    Custom Fields
+                                                    {% endif %}
+                                                </h1>
+                                                <span class="fw-semibold text-white opacity-50">Feed Fusion
+                                                    System</span>
+                                            </div>
+                                            <!--end::Title-->
 
-                            <div class="card-body pt-6"
-                                 style="min-height: 600px;">
-                                <!--begin::Table container-->
-                                <div class="table-responsive">
-                                    <!--begin::Table-->
-                                    <table class="table table-row-dashed align-middle gs-0 gy-3 my-0">
-                                        <!--begin::Table head-->
-                                        <thead>
-                                            <tr class="fs-7 fw-bold text-gray-500 border-bottom-0">
-                                                <th class="p-0 pb-3 min-w-100px text-start">PRODUCT NAME / EAN</th>
-                                                <th class="p-0 pb-3 min-w-175px text-end">SOURCE</th>
-                                                <th class="p-0 pb-3 min-w-100px text-end">PRICE</th>
-                                                <th class="p-0 pb-3 min-w-175px text-end pe-12">SELECT PRODUCT</th>
-                                            </tr>
-                                        </thead>
-                                        <!--end::Table head-->
-                                        <!--begin::Table body-->
-                                        <tbody>
-                                            <form id="add-to-product-collection-form"
-                                                  action=""
-                                                  method="post">
-                                                {% csrf_token %}
-                                                <input name="add-to-product-collection-form"
-                                                       style="display: none;" />
-                                                {% for field in form %}
-                                                {% tag_get_product_data field.name as product_data %}
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="symbol symbol-50px me-3">
-                                                                <img src={{product_data.properties.main_image}}
-                                                                     class=""
-                                                                     alt="">
-                                                            </div>
-                                                            <div class="d-flex justify-content-start flex-column">
+                                        </div>
+                                        <!--end::Body-->
+                                    </div>
+                                    <!--end::Engage widget 1-->
 
-                                                                <a href="#"
-                                                                   id="kt_modal_select_location_{{product_data.id}}_target"
-                                                                   data-bs-toggle="modal"
-                                                                   data-bs-target="#kt_modal_select_{{product_data.id}}_location"
-                                                                   class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">{{product_data.properties.name}}</a>
-                                                                <span
-                                                                      class="text-gray-500 fw-semibold d-block fs-7">{{product_data.properties.ean}}</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-end pe-0">
-                                                        <span
-                                                              class="text-gray-500 fw-semibold d-block fs-7">{{product_data.properties.feed}}</span>
-                                                    </td>
-                                                    <td class="text-end pe-0">
-                                                        <span
-                                                              class="text-gray-600 fw-bold fs-6">{{product_data.properties.sales_price_excluding_tax}}</span>
-                                                    </td>
-                                                    <td class="text-end pe-0">
-                                                        <span class="text-gray-600 fw-bold fs-6">{{field}}</span>
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                            </form>
-                                        </tbody>
-                                        <!--end::Table body-->
 
-                                    </table>
+                                    <!--begin::Row-->
+                                    <div class="row g-5 g-xl-8">
+
+                                    </div>
+                                    <!--end::Row-->
                                 </div>
-                                <!--end::Table-->
+                                <!--end::Col-->
                             </div>
-                            <!--end: Card Body-->
-                            <div class="pagination">
-                                <span class="step-links">
-                                    {% if paginator_control.has_previous %}
-                                    <a href="?page=1">&laquo; first</a>
-                                    <a href="?page={{ paginator_control.previous_page_number }}">previous</a>
-                                    {% endif %}
-
-                                    <span class="current">
-                                        Page {{ paginator_control.number }} of {{paginator_control.paginator.num_pages}}
-                                    </span>
-
-                                    {% if paginator_control.has_next %}
-                                    <a href="?page={{ paginator_control.next_page_number }}">next</a>
-                                    <a href="?page={{ paginator_control.paginator.num_pages }}">last &raquo;</a>
-                                    {% endif %}
-                                </span>
-                            </div>
+                            <!--end::Row-->
                         </div>
-                        <!--end::Table widget 14-->
-
+                        <!--end::Container-->
                     </div>
-                    <!--end::Product_List-->
+                    <!--end::Header tablet and mobile-->
                     {% endif %}
                     {% endwith %}
-                </div>
+                    {% endwith %}
+
+                    <div class="container-xxl"
+                         id="kt_content_container">
+
+
+                        {% block content %}
+                        {% endblock %}
 
 
 
 
-                <!--begin::Footer-->
-                <div class="footer py-4 d-flex flex-lg-column"
-                     id="kt_footer">
-                    <!--begin::Container-->
-                    <div class="container-fluid d-flex flex-column flex-md-row flex-stack">
-                        <!--begin::Copyright-->
-                        <div class="text-gray-900 order-2 order-md-1">
-                            <span class="text-gray-500 fw-semibold me-1">Created by</span>
-                            <a href="https://keenthemes.com"
-                               target="_blank"
-                               class="text-muted text-hover-primary fw-semibold me-2 fs-6">Feed Fusion</a>
+
+                        {% if request.resolver_match.url_name == 'master_list_page' %}
+                        <!--begin::Sorting Bar-->
+                        <div class="d-flex flex-wrap flex-stack pb-7">
+                            <!--begin::Title-->
+                            <div class="d-flex flex-wrap align-items-center my-1">
+                                <h3 class="fw-bold me-5 my-1">{{found_products_count}} Items Found
+                                    {% if sort_type != "Sort by" %}
+
+                                    <span class="text-gray-500 fs-6">by {{sort_type}}</span>
+                                    {% endif %}
+                                </h3>
+                            </div>
+                            <!--end::Title-->
+                            <!--begin::Controls-->
+                            <div class="d-flex flex-wrap my-1">
+
+                                <!--begin::Actions-->
+                                <div class="d-flex my-0">
+                                    <!--begin::Select-->
+
+                                    {{sorting_option_form.sorting_options}}
+
+                                    <!--end::Select-->
+
+                                </div>
+                                <!--end::Actions-->
+                            </div>
+                            <!--end::Controls-->
                         </div>
-                        <!--end::Copyright-->
-                        <!--begin::Menu-->
-                        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                            <li class="menu-item">
-                                <a href="https://feedfusion.nl/"
-                                   target="_blank"
-                                   class="menu-link px-2">About</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="https://feedfusion.nl/"
-                                   target="_blank"
-                                   class="menu-link px-2">Support</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="https://feedfusion.nl/"
-                                   target="_blank"
-                                   class="menu-link px-2">Purchase</a>
-                            </li>
-                        </ul>
-                        <!--end::Menu-->
+                        <!--end::Sorting Bar-->
+                        {% endif %}
+                </form>
+
+                {% with request.resolver_match.url_name as url_ %}
+                {% if url_ == 'master_list_page' or url_ == 'product_selection_page' %}
+                <!--begin::Product_List-->
+                <div class="col-xl-12">
+                    <!--begin::Table widget 14-->
+                    <div class="card card-flush h-md-100">
+                        <!--begin::Header-->
+
+                        <!--end::Header-->
+                        <!--begin::Body-->
+
+                        <div class="card-body pt-6"
+                             style="min-height: 600px;">
+                            <!--begin::Table container-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed align-middle gs-0 gy-3 my-0">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        <tr class="fs-7 fw-bold text-gray-500 border-bottom-0">
+                                            <th class="p-0 pb-3 min-w-100px text-start">PRODUCT NAME / EAN</th>
+                                            <th class="p-0 pb-3 min-w-175px text-end">SOURCE</th>
+                                            <th class="p-0 pb-3 min-w-100px text-end">PRICE</th>
+                                            <th class="p-0 pb-3 min-w-175px text-end pe-12">SELECT PRODUCT</th>
+                                        </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+                                        <form id="add-to-product-collection-form"
+                                              action=""
+                                              method="post">
+                                            {% csrf_token %}
+                                            <input name="add-to-product-collection-form"
+                                                   style="display: none;" />
+                                            {% for field in form %}
+                                            {% tag_get_product_data field.name as product_data %}
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="symbol symbol-50px me-3">
+                                                            <img src={{product_data.properties.main_image}}
+                                                                 class=""
+                                                                 alt="">
+                                                        </div>
+                                                        <div class="d-flex justify-content-start flex-column">
+
+                                                            <a href="#"
+                                                               id="kt_modal_select_location_{{product_data.id}}_target"
+                                                               data-bs-toggle="modal"
+                                                               data-bs-target="#kt_modal_select_{{product_data.id}}_location"
+                                                               class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">{{product_data.properties.name}}</a>
+                                                            <span
+                                                                  class="text-gray-500 fw-semibold d-block fs-7">{{product_data.properties.ean}}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end pe-0">
+                                                    <span
+                                                          class="text-gray-500 fw-semibold d-block fs-7">{{product_data.properties.feed}}</span>
+                                                </td>
+                                                <td class="text-end pe-0">
+                                                    <span
+                                                          class="text-gray-600 fw-bold fs-6">{{product_data.properties.sales_price_excluding_tax}}</span>
+                                                </td>
+                                                <td class="text-end pe-0">
+                                                    <span class="text-gray-600 fw-bold fs-6">{{field}}</span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </form>
+                                    </tbody>
+                                    <!--end::Table body-->
+
+                                </table>
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end: Card Body-->
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if paginator_control.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ paginator_control.previous_page_number }}">previous</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ paginator_control.number }} of
+                                    {{paginator_control.paginator.num_pages}}
+                                </span>
+
+                                {% if paginator_control.has_next %}
+                                <a href="?page={{ paginator_control.next_page_number }}">next</a>
+                                <a href="?page={{ paginator_control.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
-                    <!--end::Container-->
+                    <!--end::Table widget 14-->
+
                 </div>
-                <!--end::Footer-->
+                <!--end::Product_List-->
+                {% endif %}
+                {% endwith %}
             </div>
-            <!--end::Wrapper-->
+
+
+
+            <!--begin::Footer-->
+            <div class="footer py-4 d-flex flex-lg-column"
+                 id="kt_footer">
+                <!--begin::Container-->
+                <div class="container-fluid d-flex flex-column flex-md-row flex-stack">
+                    <!--begin::Copyright-->
+                    <div class="text-gray-900 order-2 order-md-1">
+                        <span class="text-gray-500 fw-semibold me-1">Created by</span>
+                        <a href="https://keenthemes.com"
+                           target="_blank"
+                           class="text-muted text-hover-primary fw-semibold me-2 fs-6">Feed Fusion</a>
+                    </div>
+                    <!--end::Copyright-->
+                    <!--begin::Menu-->
+                    <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                        <li class="menu-item">
+                            <a href="https://feedfusion.nl/"
+                               target="_blank"
+                               class="menu-link px-2">About</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="https://feedfusion.nl/"
+                               target="_blank"
+                               class="menu-link px-2">Support</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="https://feedfusion.nl/"
+                               target="_blank"
+                               class="menu-link px-2">Purchase</a>
+                        </li>
+                    </ul>
+                    <!--end::Menu-->
+                </div>
+                <!--end::Container-->
+            </div>
+            <!--end::Footer-->
         </div>
-        <!--end::Page-->
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Page-->
     </div>
     <!--end::Root-->
     {% with request.resolver_match.url_name as url_ %}
@@ -522,9 +513,9 @@
                 <!--end::Modal header-->
                 <!--begin::Modal body-->
                 <div class="modal-body">
-                    <form id="kt_ecommerce_add_product_form"
-                          class="form d-flex flex-column flex-lg-row fv-plugins-bootstrap5 fv-plugins-framework"
-                          data-kt-redirect="apps/ecommerce/catalog/products.html">
+                    <div id="kt_ecommerce_add_product_form"
+                         class="form d-flex flex-column flex-lg-row fv-plugins-bootstrap5 fv-plugins-framework"
+                         data-kt-redirect="apps/ecommerce/catalog/products.html">
                         <!--begin::Aside column-->
                         <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
                             <!--begin::Thumbnail settings-->
@@ -634,7 +625,7 @@
 
                         </div>
                         <!--end::Main column-->
-                    </form>
+                    </div>
                 </div>
                 <!--end::Modal body-->
                 <!--begin::Modal footer-->

@@ -1,10 +1,6 @@
 import json
 from decimal import Decimal
-from product_feed_generator.models import (
-    Feed,
-    FeedConfiguration,
-    Product
-)
+from product_feed_generator.models import Feed, FeedConfiguration, Product
 
 
 def _apply_configuration_scheme(selected_products_list, shop_name) -> list:
@@ -31,7 +27,7 @@ def _apply_configuration_scheme(selected_products_list, shop_name) -> list:
     attributes_to_remove_from_list = set(allOriginalAttributesOfList) - set(
         current_product_schema_for_final_feed
     )
-    attributes_to_remove_from_list.add('feed_id')
+    attributes_to_remove_from_list.add("feed_id")
     selected_products_list_with_custom_calc_fields = _add_custom_calc_fields(
         selected_products_list, allFieldsOfProduct, shop_name
     )
@@ -62,7 +58,9 @@ def _get_calculation_results(product, custom_field_with_name_and_parts) -> dict:
         if len(custom_field_with_name_and_parts["calculation_elements"]) == 1:
             try:
                 temp_context_update = {
-                    custom_calculated_field_name: custom_field_with_name_and_parts["calculation_elements"][0].split("custom_value_")[1],
+                    custom_calculated_field_name: custom_field_with_name_and_parts[
+                        "calculation_elements"
+                    ][0].split("custom_value_")[1],
                 }
             except:
                 temp_context_update = {
@@ -70,9 +68,13 @@ def _get_calculation_results(product, custom_field_with_name_and_parts) -> dict:
                 }
         else:
             string_for_evaluation_in_python = ""
-            for calculation_element in custom_field_with_name_and_parts["calculation_elements"]:       
+            for calculation_element in custom_field_with_name_and_parts[
+                "calculation_elements"
+            ]:
                 if any(ext in calculation_element for ext in ["+", "-", "*", "/"]):
-                    string_for_evaluation_in_python = string_for_evaluation_in_python + calculation_element
+                    string_for_evaluation_in_python = (
+                        string_for_evaluation_in_python + calculation_element
+                    )
                 elif "custom_value_" in calculation_element:
                     string_for_evaluation_in_python = (
                         string_for_evaluation_in_python
@@ -82,10 +84,15 @@ def _get_calculation_results(product, custom_field_with_name_and_parts) -> dict:
                     )
                 else:
                     string_for_evaluation_in_python = (
-                        string_for_evaluation_in_python + "product.get('" + calculation_element + "')"
-                    )        
+                        string_for_evaluation_in_python
+                        + "product.get('"
+                        + calculation_element
+                        + "')"
+                    )
             try:
-                custom_calculated_field_result_value = eval("round(" + string_for_evaluation_in_python + ",2)")
+                custom_calculated_field_result_value = eval(
+                    "round(" + string_for_evaluation_in_python + ",2)"
+                )
                 temp_context_update = {
                     custom_calculated_field_name: custom_calculated_field_result_value,
                 }
@@ -96,6 +103,7 @@ def _get_calculation_results(product, custom_field_with_name_and_parts) -> dict:
                 }
         custom_calc_fields_as_return_value.update(temp_context_update),
     return custom_calc_fields_as_return_value
+
 
 def _add_custom_calc_fields(
     selected_products_list, allFieldsOfProduct, shop_name

@@ -1,3 +1,5 @@
+from django.http import HttpRequest
+
 from product_feed_generator.modules.final_feed_.output.xml import (
     _add_products_to_final_feed,
 )
@@ -6,12 +8,36 @@ from product_feed_generator.modules.final_feed_.output.database import (
     _remove_custom_calc_unit_from_database,
     _sync_feed_conf_from_database,
 )
+from product_feed_generator.models import (
+    Product,
+)
+
+
+@staticmethod
+def handle_selection_of_products(request: HttpRequest):
+    selected_products_from_database_list: list[Product] = Product.objects.filter(
+        is_selected=True
+    )
+    # select product
+    for form_product in request.POST:
+        if " ––– " in form_product:
+            product_name_of_form = form_product.split(" ––– ")[1]
+            Product.objects.filter(name=product_name_of_form).update(is_selected=True)
+    # unselect product
+    # selected_products_from_form_list: list = []
+    # for value in request.POST:
+    #     selected_products_from_form_list.append(str(value))
+    # for db_product in selected_products_from_database_list:
+    #     # contnains substring (if not it was unselected)? If not unselect
+    #     if not any(str(db_product) in s for s in selected_products_from_form_list):
+    #         Product.objects.filter(name=db_product).update(is_selected=False)
 
 
 class FinalFeed_:
     """
     This class handles everything in terms of the Final Feed
     """
+
     # def __init__(_self):
     # self._shop_name = name
     # _self.shop_name = shop_name
