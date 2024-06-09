@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     "feedfusion.nl",
     "www.feedfusion.nl",
     "staging.feedfusion.nl",
+    "143.198.131.241",
 ]
 
 

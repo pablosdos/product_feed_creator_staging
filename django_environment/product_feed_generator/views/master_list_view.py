@@ -40,11 +40,20 @@ def master_list_view(request):
         search_query: str = request.POST.get("search_bar", "")
 
     elif request.method == "GET":
-        page_number = request.GET.get("page")
-        sort_type = request.session["sort_type"]
-        choosen_company: str = request.session["choosen_company"]
-        search_query: str = request.session["search_query"]
-
+        if 'sort_type' in request.session:
+            sort_type = request.session.get("sort_type")
+        else:
+            sort_type = "Sort by"
+        if 'choosen_company' in request.session:
+            choosen_company: str = request.session.get("choosen_company")
+        else:
+            choosen_company = "All"
+        if 'search_bar' in request.session:
+            search_query: str = request.session.get("search_bar")
+        else:
+            search_query = ""            
+        page_number = request.GET.get("page", 1)
+    
     sorting_option_form = SortingSelectForm()
     # print(request.POST)
     if "add-to-product-collection-form" in request.POST:
